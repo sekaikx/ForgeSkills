@@ -1,9 +1,8 @@
 ---
 name: gamedev-unity-pipeline
 description: >
-  Wire a Unity 6 project: FBX/glTF import settings, prefab structure, materials and URP/HDRP
-  setup, ScriptableObject data, and build verification. Use when the target engine is Unity
-  and imported assets must arrive at the right scale, orientation and material setup.
+  Wire a Unity 6 project so imported assets land at the right scale, orientation, and
+  materials. Use for FBX or glTF import, prefabs, URP or HDRP, and build checks.
 license: Apache-2.0
 compatibility: Unity 6 (6000.x). Differences from Unity 2022 noted.
 metadata:

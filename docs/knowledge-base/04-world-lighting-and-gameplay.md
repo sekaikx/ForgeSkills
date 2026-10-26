@@ -317,10 +317,11 @@ it; the world reads it; weather erases it. "A thousand tracks cost the same as o
 moving window (T-53).
 
 **Validate.** Walk a long path; marks persist, then fade; frame cost unchanged by track
-count.
+count. Where the ground should physically give (snow you sink into), the buffer also
+displaces the surface, on the order of 10 cm, not only a darker texture (S16 L79-87).
 
 **Recover.** If marks swim when the window moves, scroll UVs with the window origin.
 
 **Skill.** `gamedev-vfx-impact`, `gamedev-performance`.
 **Basis.** transcript.
-**Src.** S12 L73-83.
+**Src.** S12 L73-83; S16 L79-87 (displacement, not a colour-only snow texture).

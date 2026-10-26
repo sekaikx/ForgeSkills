@@ -1,11 +1,9 @@
 ---
 name: gamedev-orchestrator
 description: >
-  Plan and drive a multi-stage AI game-development task from a one-line brief to a
-  playable, verified build. Use at the start of any non-trivial game or asset task to
-  decompose it, sequence the stages, decide which sub-skills apply, and define the
-  acceptance gates that stop work from drifting. Also use when a task is stalling or
-  sprawling and needs re-scoping.
+  Plan a multi-stage game or asset task from brief to verified build: stages, which skills
+  apply, acceptance gates. Use at the start of any non-trivial game task, or when one is
+  stalling or sprawling.
 license: Apache-2.0
 compatibility: Engine-agnostic. Works with Godot 4.x, Unity 6, Blender 4.x/5.x.
 metadata:
@@ -55,6 +53,11 @@ If the user's brief is a single sentence, still write this table, then state you
 assumptions out loud. That is the whole point — an unstated assumption is the defect you
 will debug in an hour.
 
+**New game, not a new task.** If nobody has decided the game is worth making, stop and use
+`gamedev-concept-judge` (an idea exists) or `gamedev-concept-lab` (it does not). Do not
+spend stages 4–8 on a pitch with no verdict. If two greyboxes already exist, play both
+and keep one before any art (T-74): the source threw out two worlds after playing them.
+
 ## Step 2 — Decompose into stages with artifacts
 
 Each stage must own **one artifact** and **one gate**. A stage without an artifact is not a
@@ -89,6 +92,8 @@ redo and the most tempting to start with — do it last.
 | Light rigs, mood, shadow budget | `gamedev-lighting` |
 | Framing, FOV, camera rigs | `gamedev-camera` |
 | Enemies, combat, inventory, loops | `gamedev-gameplay-systems` |
+| A boss or set-piece duel | `gamedev-boss-encounter` |
+| Silence, impacts, music cues | `gamedev-audio-wire` |
 | Terrain/roads/rivers from height data | `gamedev-world-from-data` |
 | LODs, budgets, draw calls | `gamedev-performance` |
 | Godot project wiring | `gamedev-godot-pipeline` |
@@ -126,6 +131,15 @@ A gate must be **runnable by someone else** and **falsifiable**.
 
 If you cannot write a gate, the stage is under-specified. Sharpen it before building.
 
+## Working cheaply (tokens and wall time)
+
+- **Run the tool, read its summary.** Measurement scripts print a verdict table; read that,
+  not raw logs. Redirect engine output to a file and grep it.
+- **Copy shipped assets, don't retype them** (shaders in `assets/`, tools in `tools/`).
+- **Load references on demand** — only the `references/` section the current step names.
+- **Batch engine launches.** One launch captures every viewpoint; a scene load costs a minute.
+- **Grep before read; read by line range** in large projects and long docs.
+
 ## Failure modes and the fix
 
 | Symptom | Cause | Fix |
@@ -162,4 +176,4 @@ proves it.
 ## Knowledge base
 
 T-01 (orchestration roles), T-02 (gauntlet loop), T-03 (multi-model division of labour),
-T-06 (instrumented testing), T-07 (reference-first iteration).
+T-06 (instrumented testing), T-07 (reference-first iteration), T-74 (kill a greybox before art).

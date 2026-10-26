@@ -1,8 +1,12 @@
+<p align="center">
+  <img src="docs/media/hero.gif" width="960" alt="Two panels. The left is a fixed reference silhouette. The right starts offset and red where it disagrees, then closes until the score passes 0.85. The number begins at 0.46.">
+</p>
+
 # ForgeSkills
 
-20 game-development skills for AI coding agents. Each one is a procedure with gates — what to do, in what order, what to measure, and what counts as done — plus the Python tooling that makes the claims checkable.
+An agent will say the scene looks good. ForgeSkills makes it show the picture and the number.
 
-Built for agents that write code, drive Blender, and ship game assets, not for chatting about game design.
+28 skills for agents that write code, drive Blender, and ship game assets. Each one is a procedure with a gate: what to do, in what order, what to measure, and what counts as done. The opening score in the loop above, **0.46**, is a real result from this repo. The climb is the loop the skills run. The character those tools were aimed at never reached the 0.85 gate, and that failure is kept on purpose. See [`docs/TEST_RESULTS.md`](docs/TEST_RESULTS.md).
 
 ```
 measure → build → render → compare → fix one thing → repeat
@@ -10,43 +14,113 @@ measure → build → render → compare → fix one thing → repeat
 
 ---
 
+## Why use it
+
+A model already knows a lot about games. What it does not do, unless you make it, is stop. It will build the whole game in one pass, call a saved file a success, and agree that the pitch is strong.
+
+ForgeSkills is the stop.
+
+- **A stage is an artifact.** A greybox, a render, a log, a competitor row with a date. A step with nothing you can open is not a step.
+- **One change, then measure.** Two fixes in one pass teach nothing, because you cannot tell which one moved the number.
+- **The builder does not grade itself.** A second check looks at the picture, the mesh, or the log. "Script exited 0" is not that check.
+- **A new game is a market question first.** If you do not have a game yet, the agent asks what you can finish, opens store pages, and recommends one idea. It does not invent twenty themes.
+- **Context stays small.** Descriptions are routing text, about 1,564 tokens for all 28, loaded so the agent can pick. The procedure loads only when that skill is chosen. Long tables stay in `references/` until a step asks for them. See [`docs/TOKEN_EFFICIENCY.md`](docs/TOKEN_EFFICIENCY.md).
+
+---
+
+## How it compares
+
+This is a comparison of behaviour, not a claim about revenue or a benchmark win.
+
+| | A longer prompt | One giant instructions file | ForgeSkills |
+|---|---|---|---|
+| How it starts | Writes the game | Reads everything, then writes the game | Refuses until the brief has a gate, or the pitch has a verdict |
+| "Looks good" | Accepted | Restated in adjectives | A measurement from the same camera: silhouette, palette, or a frame-time |
+| "It worked" | The script exited 0 | A checklist nobody ran | The artifact, opened. Renders, bounds, a test that can fail |
+| A new idea | A list of themes | Agreement with the pitch | Shipped games, dated prices, verbatim complaints, then one recommendation |
+| When it is wrong | Another full rewrite | Another full rewrite | One cause, then the same measurement again |
+| What the chat carries | Every retry | The whole file, every time | A short description until the skill is actually needed |
+
+What you give up: speed on the first attempt. A gated pass is slower than a single prompt. It is faster than the third rewrite of a scene nobody measured.
+
+---
+
+## Where to enter
+
+```mermaid
+flowchart LR
+  start[No game yet] --> lab[concept lab]
+  have[A pitch] --> judge[concept judge]
+  lab --> judge
+  judge -->|BUILD| plan[orchestrator]
+  judge -->|STOP| lab
+  plan --> one[one skill, one artifact]
+  one --> measure[measure]
+  measure -->|one cause failed| one
+  measure -->|gate passed| next[next stage]
+```
+
+| You want | Run |
+|---|---|
+| Ideas, and you have not chosen a game | `gamedev-concept-lab` |
+| A verdict before anyone models a tree | `gamedev-concept-judge` |
+| A brief turned into stages | `gamedev-orchestrator` |
+| An asset that matches a picture | `gamedev-reference-reconstruction` → `gamedev-visual-iteration` |
+| A scene that looks flat in Godot | `gamedev-godot-visual-polish` |
+| A boss that feels random | `gamedev-boss-encounter` |
+| Proof, not a status line | `gamedev-verification` |
+| A bug that must not return | `gamedev-debugging` → `gamedev-game-testing` |
+
+You do not have to name them. "Rebuild this character sheet as a 3D model" matches `gamedev-reference-reconstruction` on its own.
+
+---
+
 ## What's in here
 
 | Group | Skills |
 |---|---|
-| **Workflow core** | `gamedev-orchestrator`, `gamedev-verification`, `gamedev-visual-iteration`, `gamedev-debugging`, `gamedev-game-testing` |
+| **Direction** | `gamedev-concept-lab`, `gamedev-concept-judge` |
+| **Workflow** | `gamedev-orchestrator`, `gamedev-verification`, `gamedev-visual-iteration`, `gamedev-debugging`, `gamedev-game-testing` |
 | **Assets** | `gamedev-reference-reconstruction`, `gamedev-blender-headless`, `gamedev-procedural-modeling`, `gamedev-modular-kit`, `gamedev-texture-authoring` |
 | **Motion and feel** | `gamedev-animation`, `gamedev-locomotion`, `gamedev-vfx-impact` |
-| **World and presentation** | `gamedev-lighting`, `gamedev-camera`, `gamedev-world-from-data` |
-| **Systems and shipping** | `gamedev-gameplay-systems`, `gamedev-performance`, `gamedev-godot-pipeline`, `gamedev-unity-pipeline` |
+| **World and presentation** | `gamedev-lighting`, `gamedev-camera`, `gamedev-world-from-data`, `gamedev-godot-visual-polish`, `gamedev-foliage`, `gamedev-visual-artifacts`, `gamedev-art-direction` |
+| **Systems and shipping** | `gamedev-gameplay-systems`, `gamedev-boss-encounter`, `gamedev-audio-wire`, `gamedev-performance`, `gamedev-godot-pipeline`, `gamedev-unity-pipeline` |
 
-Full index with one-line descriptions: [`docs/README.md`](docs/README.md).
-
-### The skills, individually
+Full index: [`docs/README.md`](docs/README.md).
 
 <details>
-<summary><b>Workflow core</b> — start here</summary>
+<summary><b>Direction</b> — before a new game, not during a task</summary>
 
 | Skill | Solves |
 |---|---|
-| `gamedev-orchestrator` | A one-line brief that has to become a staged, gated build. Turns the request into a six-line contract and refuses to start while any line is blank. |
-| `gamedev-verification` | "It said success" without evidence. Artifact-level proof, engine smoke tests, and the specific ways AI game work reports false success. |
-| `gamedev-visual-iteration` | Visual work that stalls after several passes. Render, compare, rank discrepancies, fix one cause, re-render. |
-| `gamedev-debugging` | A failure whose cause is not obvious, or a fix that made it worse. Reproduce, isolate, instrument, bisect to one cause. |
-| `gamedev-game-testing` | Turning "it works" into a test: headless smoke runs, state-machine assertions, visual regression, loop tests. |
+| `gamedev-concept-lab` | "What should I make?" Asks team, time, engine, and refusals, scans shipped games, then recommends one loop plus one twist. |
+| `gamedev-concept-judge` | "Is this worth building?" Five dated competitors, scores tagged as fact or inference, then BUILD, NARROW, or STOP. |
 
 </details>
 
 <details>
-<summary><b>Assets</b> — modelling, texturing, kits</summary>
+<summary><b>Workflow</b> — once the game is chosen</summary>
 
 | Skill | Solves |
 |---|---|
-| `gamedev-reference-reconstruction` | A supplied concept sheet or turnaround that must be rebuilt as the actual asset, not something "inspired by" it. Includes measurable acceptance criteria and a discrepancy ledger. |
-| `gamedev-blender-headless` | Scripted Blender: builds, batch renders, exports. Covers the 4.x/5.x API differences that break scripts. |
-| `gamedev-procedural-modeling` | Geometry from parameters — lofts, capsules, sweeps, scattered props. And when *not* to go procedural. |
-| `gamedev-modular-kit` | Environments from reusable parts: grid rules, pivots, shared atlas, parameterized variants. |
-| `gamedev-texture-authoring` | PBR maps derived from one albedo, seamless tiling, texel density, atlases. |
+| `gamedev-orchestrator` | A one-line brief that has to become a staged build. Six-line contract. Blank lines are not allowed. |
+| `gamedev-verification` | "It said success" with no evidence. Artifact checks, smoke tests, and the ways AI game work fakes a pass. |
+| `gamedev-visual-iteration` | Visual work that stalls. Render, compare, rank the gaps, fix one cause, render again. |
+| `gamedev-debugging` | A failure with an unclear cause, or a fix that made it worse. Reproduce, isolate, bisect. |
+| `gamedev-game-testing` | "It works" turned into a test: smoke runs, state machines, visual regression, a bot on the path you did not play. |
+
+</details>
+
+<details>
+<summary><b>Assets</b></summary>
+
+| Skill | Solves |
+|---|---|
+| `gamedev-reference-reconstruction` | A concept sheet that must become the asset, not something inspired by it. Measured acceptance, a discrepancy ledger. |
+| `gamedev-blender-headless` | Scripted Blender. Headless for batches, MCP when you are watching one prop, not clicking the UI. |
+| `gamedev-procedural-modeling` | Lofts, capsules, sweeps, scatters. And when not to go procedural. |
+| `gamedev-modular-kit` | Villages and rooms from parts: grid, pivots, one atlas. |
+| `gamedev-texture-authoring` | Roughness and normals from one albedo, tiling, texel density. |
 
 </details>
 
@@ -55,9 +129,9 @@ Full index with one-line descriptions: [`docs/README.md`](docs/README.md).
 
 | Skill | Solves |
 |---|---|
-| `gamedev-animation` | Rigging and skinning by script, authoring clips, retargeting between rigs. |
-| `gamedev-locomotion` | Movement that feels floaty, slippery or unresponsive when the animation is already correct. |
-| `gamedev-vfx-impact` | Combat that feels weightless. Layered impact FX, hitstop, screen response, fracture. |
+| `gamedev-animation` | Rigs and clips by script, retargets, poses before in-betweens. |
+| `gamedev-locomotion` | Floaty, slippery, or late movement when the animation is already fine. |
+| `gamedev-vfx-impact` | Hits with no weight. Hit-stop, shake, layered particles, fracture. |
 
 </details>
 
@@ -66,9 +140,13 @@ Full index with one-line descriptions: [`docs/README.md`](docs/README.md).
 
 | Skill | Solves |
 |---|---|
-| `gamedev-lighting` | Scenes that are technically lit but read flat. Key/fill/rim, shadow budget, mood matching. |
-| `gamedev-camera` | A view that is nauseating, unreadable, or fighting the player. |
-| `gamedev-world-from-data` | Terrain, roads and rivers built from elevation data instead of by hand. |
+| `gamedev-lighting` | A scene that is lit and still reads flat. Key, fill, rim, a shadow budget. |
+| `gamedev-camera` | A view that fights the player. |
+| `gamedev-world-from-data` | Terrain, roads, and rivers from elevation data. |
+| `gamedev-godot-visual-polish` | A Godot scene that looks default. Settings in a fixed order, then the frame cost of each one. |
+| `gamedev-foliage` | Paper trees, a frozen world, grass that costs too much. Two shaders ship with the skill. |
+| `gamedev-visual-artifacts` | Shimmer, acne, leaks, ghosting, z-fighting, hitches. Found by isolation, not hidden with blur. |
+| `gamedev-art-direction` | Mixed packs that do not read as one game. |
 
 </details>
 
@@ -77,10 +155,12 @@ Full index with one-line descriptions: [`docs/README.md`](docs/README.md).
 
 | Skill | Solves |
 |---|---|
-| `gamedev-gameplay-systems` | Enemies, combat with damage stages, inventory, spawning, spec-first balance. |
-| `gamedev-performance` | Frame budgets: draw calls, LOD, occlusion, texture memory, detail by screen size. |
-| `gamedev-godot-pipeline` | Godot 4.x scene structure, import settings, autoloads, headless verification. |
-| `gamedev-unity-pipeline` | Unity 6 import settings, prefabs, URP/HDRP, ScriptableObject data, build checks. |
+| `gamedev-gameplay-systems` | Enemies, combat, inventory, spawning. The spec before the code. |
+| `gamedev-boss-encounter` | A boss as a timeline: telegraph, active hit, recovery, lock-on that can step back. |
+| `gamedev-audio-wire` | Chosen sounds hooked to events that already exist, license written down. Not a composer's workflow. |
+| `gamedev-performance` | Draw calls, LOD, occlusion, what is on screen. |
+| `gamedev-godot-pipeline` | Godot 4 import, scenes, autoloads, headless checks. |
+| `gamedev-unity-pipeline` | Unity 6 import, prefabs, URP/HDRP, build checks. |
 
 </details>
 
@@ -88,9 +168,7 @@ Full index with one-line descriptions: [`docs/README.md`](docs/README.md).
 
 ## Install
 
-Skills are folders containing a `SKILL.md`. Every agent below reads that layout, so installation is a file copy — no build step, no package manager.
-
-Clone once:
+A skill is a folder with a `SKILL.md`. Installation is a copy. No build, no package manager.
 
 ```bash
 git clone https://github.com/sekaikx/ForgeSkills.git
@@ -99,9 +177,7 @@ cd ForgeSkills
 
 ### Claude Code
 
-Claude Code reads `~/.claude/skills/<name>/SKILL.md` for personal skills and `.claude/skills/<name>/SKILL.md` for project skills.
-
-**Personal — available in every project on this machine:**
+Personal, every project on the machine:
 
 ```bash
 # macOS / Linux
@@ -113,57 +189,54 @@ New-Item -ItemType Directory -Force "$env:USERPROFILE\.claude\skills" | Out-Null
 Copy-Item skills\gamedev-* -Destination "$env:USERPROFILE\.claude\skills" -Recurse
 ```
 
-**Project — committed with the repo, shared with anyone who clones it:**
+Project, committed with the repo:
 
 ```bash
 mkdir -p .claude/skills
 cp -r ../ForgeSkills/skills/gamedev-* .claude/skills/
-git add .claude/skills && git commit -m "Add ForgeSkills game dev skills"
 ```
 
-Claude loads them automatically when a request matches a skill's `description`, or you can call one directly with `/gamedev-orchestrator`. Restart the session if `~/.claude/skills` did not exist when it started.
+Claude matches a request to a skill's `description`, or you call one with `/gamedev-orchestrator`. Restart the session if `~/.claude/skills` did not exist when it started.
 
 ### Cursor
 
-Cursor discovers `.agents/skills/`, `.cursor/skills/`, and the user-level `~/.agents/skills/` and `~/.cursor/skills/`. It also reads `.claude/skills/`, so the Claude Code project install above works unchanged.
+Cursor reads `.agents/skills/`, `.cursor/skills/`, and `.claude/skills/`.
 
 ```bash
-# project, shared via git
+# project
 mkdir -p .agents/skills
 cp -r ../ForgeSkills/skills/gamedev-* .agents/skills/
 
-# or personal, all projects
+# personal
 mkdir -p ~/.cursor/skills
 cp -r ../ForgeSkills/skills/gamedev-* ~/.cursor/skills/
 ```
 
-Type `/` in Agent chat to pick a skill by name.
+Type `/` in Agent chat and pick a skill by name.
 
 ### Other agents
-
-Any tool that implements the Agent Skills layout reads these as-is:
 
 | Tool | Path |
 |---|---|
 | Codex | `.codex/skills/` or `~/.codex/skills/` |
-| Windsurf, Cline, Roo | Point the skill/rule directory at `skills/`, or copy the folders in |
-| Anything else | A folder per skill, `SKILL.md` inside, YAML frontmatter with `name` and `description` |
+| Windsurf, Cline, Roo | Point the skill directory at `skills/`, or copy the folders |
+| Anything else | One folder per skill, `SKILL.md` inside, YAML frontmatter with `name` and `description` |
 
-If your agent only supports a single rules file, concatenate the skills you need rather than all twenty — the descriptions are written to be matched against, and a wall of text defeats that.
+If your agent only supports one rules file, concatenate the skills you need. All 28 at once defeats the routing.
 
-### Put the tooling where the skills expect it
+### Tooling path
 
-Skill bodies reference scripts as `tools/refmatch/...` and `tools/texture/...`, relative to the repo root. If you copied skills somewhere else, either keep a `ForgeSkills/` checkout next to the project and reference it by absolute path, or symlink `tools/`:
+Skill bodies call `tools/refmatch/...` and `tools/texture/...` from the repo root. If the skills live elsewhere, symlink `tools/` or keep a checkout beside the project.
 
 ```bash
-ln -s ~/ForgeSkills/tools ./tools          # macOS / Linux
+ln -s ~/ForgeSkills/tools ./tools
 ```
 
 ```powershell
 New-Item -ItemType Junction -Path .\tools -Target "$env:USERPROFILE\ForgeSkills\tools"
 ```
 
-Nothing breaks if you skip this — the skills still contain the full procedure — but the measurement steps need the scripts.
+Skip this and the procedures still read. The measurement steps need the scripts.
 
 ---
 
@@ -175,138 +248,116 @@ pip install pillow numpy
 
 | Component | Needs |
 |---|---|
-| All skills | Nothing |
+| The skills themselves | Nothing |
 | `tools/refmatch/*`, `tools/texture/tex_to_maps.py`, `tile_seam_check.py` | Python 3.10+, Pillow, numpy |
-| `tools/texture/uv_density.py` | Python 3.10+ (stdlib only) |
+| `tools/texture/uv_density.py`, `tools/validate_skills.py`, `tools/token_budget.py` | Python 3.10+ |
 | `tools/blender/*` | Blender 4.2+ or 5.x |
-| Godot / Unity pipeline skills | The engine — not required to read the skill |
+| Godot and Unity skills | The engine, and only when you run them |
+
+Regenerate the header loop with `python tools/readme_hero.py`.
 
 ---
 
 ## Tooling
 
-Real scripts with CLIs, not snippets. Each exits nonzero on a failed check, so they drop into CI.
+Each script exits nonzero on a failed check.
 
 | Script | What it measures |
 |---|---|
-| `tools/validate_skills.py` | Lints this library: frontmatter, name/directory match, cross-references, tool paths, technique citations |
-| `tools/refmatch/compare.py` | Silhouette IoU, 10-band width profile, palette ΔE, aspect ratio, luminance histogram correlation, SSIM (advisory) |
-| `tools/refmatch/overlay.py` | Three-panel diagnostic sheet: reference, render, disagreement map |
-| `tools/refmatch/measure_sheet.py` | Clean panel crop and palette out of a concept sheet |
-| `tools/refmatch/palette_report.py` | Named colour roles against a render, per-role ΔE |
-| `tools/texture/tex_to_maps.py` | Roughness, tangent-space normal, cavity map from one albedo |
-| `tools/texture/tile_seam_check.py` | Wrap-boundary continuity against the interior distribution |
-| `tools/texture/uv_density.py` | Per-part texel density from an OBJ, flags spread |
-| `tools/blender/character_blockout.py` | Parametric human blockout from measured fractions |
-| `tools/blender/render_compare_views.py` | Fixed-camera turnaround renders with alpha |
-| `tools/blender/validate_scene.py` | Stray geometry, scale, geometry below the floor |
-| `tools/blender/explorer_build.py` | Worked example: garment and equipment pass |
-
-Typical chain for a reference-to-asset job:
+| `tools/validate_skills.py` | Frontmatter, cross-references, tool paths, technique ids, token caps |
+| `tools/token_budget.py` | Description cost, body cost, reference cost |
+| `tools/godot/ablation_capture.gd` | Frame time of each graphics setting, with a paired baseline |
+| `tools/godot/ablation_report.py` | Cost against visible change, net of noise |
+| `tools/refmatch/compare.py` | Silhouette IoU, band profile, palette ΔE, aspect. SSIM is advisory |
+| `tools/refmatch/overlay.py` | Reference, render, and the pixels that disagree |
+| `tools/refmatch/measure_sheet.py` | A clean crop and a palette from a concept sheet |
+| `tools/refmatch/palette_report.py` | Named colour roles, per-role ΔE |
+| `tools/texture/tex_to_maps.py` | Roughness, normal, and cavity from one albedo |
+| `tools/texture/tile_seam_check.py` | Whether a tile wraps |
+| `tools/texture/uv_density.py` | Texel density per part |
+| `tools/blender/character_blockout.py` | A blockout from measured fractions |
+| `tools/blender/render_compare_views.py` | Turnaround renders, fixed camera, alpha |
+| `tools/blender/validate_scene.py` | Stray geometry, scale, meshes under the floor |
+| `tools/blender/explorer_build.py` | Worked example of a garment pass |
 
 ```
 measure_sheet → character_blockout → validate_scene → render_compare_views
      → compare + overlay → fix one cause → repeat
 ```
 
----
-
-## Verify it
-
 ```bash
 python tools/validate_skills.py
 ```
 
 ```
-SKILL LIBRARY VALIDATION — 20 skills, 58 techniques known
-[OK  ] gamedev-animation                 1016 words
-...
+SKILL LIBRARY VALIDATION — 28 skills, 81 techniques known
 ERRORS 0   WARNINGS 0
 ```
 
-The validator is not decorative. It caught a dangling tool reference during this library's own build, and it caught itself silently passing on an empty directory — which is now a hard failure, because a check that passes on an empty set is not a check.
+The validator failed itself once, by reporting zero errors after finding zero skills. An empty scan is now a hard failure.
 
 ---
 
-## Using a skill
+## Rules that hold in every skill
 
-Skills are loaded by description match. You do not need to name them:
-
-> "Rebuild this character sheet as a 3D model."
-
-`gamedev-reference-reconstruction` matches, and its procedure takes over: measure the reference, build to the measurements, render from the same camera, compare numerically, close the largest discrepancy, repeat until the acceptance criteria pass or the budget runs out.
-
-Naming a skill explicitly forces it:
-
-> "Use `gamedev-orchestrator` and plan this out before writing code."
-
-The core loop skills are designed to chain:
-
-| You want | Run |
-|---|---|
-| A brief turned into staged work | `gamedev-orchestrator` |
-| An asset that matches a picture | `gamedev-reference-reconstruction` → `gamedev-visual-iteration` |
-| A visual task that is stuck | `gamedev-visual-iteration` |
-| Proof the work is done | `gamedev-verification` |
-| A bug found, not guessed at | `gamedev-debugging` → `gamedev-game-testing` |
-
----
-
-## Design rules
-
-Three rules hold across all twenty skills:
-
-1. **Measure, don't eyeball.** Every visual claim carries a number.
+1. **Measure, don't eyeball.** A visual claim carries a number.
 2. **One variable per iteration.** Change two things and you learn nothing.
-3. **Evidence or silence.** "Script executed successfully" is not evidence the artifact is right.
+3. **Evidence or silence.** A success line from the tool that built the thing is not evidence.
 
 ---
 
 ## Honest status
 
-Read [`docs/LIMITATIONS.md`](docs/LIMITATIONS.md) before trusting this with real work.
+Read [`docs/LIMITATIONS.md`](docs/LIMITATIONS.md) before trusting this with a ship date.
 
-- **Exercised:** workflow discipline, Blender scripting pitfalls, comparison and texture tooling. Real bugs were found and fixed while building it.
-- **Written but not executed:** the Godot and Unity pipeline skills. No engine was installed where they were authored, so their checklists are a specification to verify on first use.
-- **Failed its own test:** the reference reconstruction in this repo reached silhouette IoU 0.46 against a required 0.85. It is documented rather than removed, because the tooling correctly identified and quantified the failure. See [`docs/TEST_RESULTS.md`](docs/TEST_RESULTS.md).
+- **Exercised:** the workflow, the Blender pitfalls, the comparison and texture tools. Bugs in those tools were found by running them.
+- **Run in Godot 4.7.2:** the ablation capture and both foliage shaders.
+- **Written, not executed here:** the Godot and Unity pipeline checklists. Treat them as a spec until you run them.
+- **Failed its own test:** silhouette IoU 0.46 against a required 0.85. Documented, not deleted.
+- **Not in this library:** dialogue, multiplayer, save systems, store-page production, writing music. Sound *wiring* is in. Composition is not.
 
 ---
 
-## Repository layout
+## Layout
 
 ```
 ForgeSkills/
-├── skills/                    20 skills, one folder each
-│   └── gamedev-<name>/SKILL.md
-├── tools/
-│   ├── validate_skills.py
-│   ├── refmatch/              reference-vs-render comparison
-│   ├── texture/               PBR maps, tiling, texel density
-│   └── blender/               scripted build, render, validation
+├── skills/                    28 skills, one folder each
+│   └── gamedev-<name>/SKILL.md   (+ references/ and assets/, loaded on demand)
+├── tools/                     measurement, Blender, Godot ablation, this README's loop
 └── docs/
-    ├── README.md              index of all 20 skills
+    ├── README.md              index of all 28 skills
+    ├── TOKEN_EFFICIENCY.md    what the skills cost in context, and what they save
     ├── USAGE.md               worked command lines
     ├── TEST_RESULTS.md        what was run, including what failed
     ├── LIMITATIONS.md         blind spots and unverified claims
     ├── COVERAGE.md            skill × technique matrix
-    ├── transcript-sources.md  technique → source traceability
-    └── knowledge-base/        58 techniques, T-01 … T-58
+    ├── transcript-sources.md  technique → source
+    └── knowledge-base/        T-01 … T-81
 ```
+
+Techniques trace to 16 transcripts from one channel, or are marked `engineering` when this library added a number the videos never stated. Market judgments are engineering: the videos never decide whether a game should exist. The evidence rules are adapted from [marketingskills](https://github.com/coreyhaines31/marketingskills) by Corey Haines (MIT).
 
 ---
 
 ## Contributing
 
-A skill earns its place by being specific enough to disagree with. When adding one:
+A skill earns its place by being specific enough to disagree with.
 
-1. `name` must equal the directory name.
-2. The first sentence of `description` states *when to use it* — that is what the agent matches on.
-3. Include both `## When to use` and `## When not to use`. The negative case is what stops misapplication.
-4. Every step produces an artifact. A step without an artifact is a wish.
-5. Verification checkboxes must be runnable by someone else.
+1. `name` equals the directory name.
+2. `description` says when to use it. That is what the agent matches on. Keep it short. It is loaded in every chat.
+3. Include `## When to use` and `## When not to use`.
+4. Every step produces an artifact.
+5. A checkbox must be runnable by someone else.
 6. Cross-reference other skills in backticks so the validator can resolve them.
 
-Then run `python tools/validate_skills.py` and get zero errors.
+Then:
+
+```bash
+python tools/validate_skills.py
+```
+
+Zero errors, or it does not land.
 
 ---
 

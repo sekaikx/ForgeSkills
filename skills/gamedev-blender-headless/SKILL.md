@@ -1,10 +1,8 @@
 ---
 name: gamedev-blender-headless
 description: >
-  Drive Blender from scripts — headless builds, batch asset generation, renders, exports —
-  so every change is a one-line diff and every result is reproducible. Use for any
-  programmatic modelling, procedural asset generation, batch rendering, or when the user
-  has a live Blender session to control. Covers Blender 4.x and 5.x API differences.
+  Script Blender for builds, batches, renders, and exports. Use for programmatic modelling,
+  many assets, or choosing headless vs MCP vs clicking. Blender 4.x and 5.x.
 license: Apache-2.0
 compatibility: Blender 4.2+ / 5.x. Optional live control through the Blender MCP server.
 metadata:
@@ -229,6 +227,14 @@ environments.
 [ ] re-import the file and measure it — an exporter's exit code proves nothing
 ```
 
+## Which driver
+
+Headless and MCP both write Python. Headless is the default for a pipeline: parallel
+processes, no shared screen, and a script you can re-run with no agent. MCP is for one
+prop you want to watch; its viewport check is faster than a full render. Clicking the UI
+lost a timed test on cost and on the model. Numbers, the edit-round upset, and the
+five-agent queue: `references/mcp-vs-headless.md` (T-73).
+
 ## Reporting
 
 Print measured facts so a caller can assert without parsing the scene:
@@ -249,5 +255,6 @@ OBJECTS         : 18
 
 ## Knowledge base
 
-T-09 (headless scripts as the iteration unit), T-11 (grid scale), T-14 (measure the drawing),
-T-20 (batch CLI with orientation QA), T-58 (kit as reuse unit).
+T-09 (headless scripts as the iteration unit), T-73 (when MCP or computer-use loses),
+T-11 (grid scale), T-14 (measure the drawing), T-20 (batch CLI with orientation QA),
+T-58 (kit as reuse unit).

@@ -178,6 +178,8 @@ number, or it is superstition.
 - `gamedev-texture-authoring` — texture memory and density
 - `gamedev-world-from-data` — height-field LOD
 - `gamedev-verification` — evidence discipline
+- `gamedev-godot-visual-polish` — leave-one-out cost per graphics setting; cut quality before presence
+- `gamedev-foliage` — instanced ground cover, overdraw
 
 ## Knowledge base
 

@@ -1,7 +1,8 @@
 # AI Game Development Skills Library
 
-20 executable skills for AI agents doing game and 3D asset work, plus the tooling that makes
-their claims checkable. Every technique traces back to the 12 analysed transcripts — see
+28 executable skills for AI agents doing game and 3D asset work, plus the tooling that makes
+their claims checkable. Every technique traces back to the 16 analysed transcripts or is
+labelled as an engineering addition — see
 [`transcript-sources.md`](transcript-sources.md) and the
 [`knowledge-base/`](knowledge-base/README.md).
 
@@ -18,7 +19,14 @@ Three rules hold across the whole library:
 
 ## The skills
 
-### Workflow core — start here
+### Direction — before a new game
+
+| Skill | Use it for |
+|---|---|
+| [concept-lab](../skills/gamedev-concept-lab/SKILL.md) | New ideas, only after constraints and a store scan |
+| [concept-judge](../skills/gamedev-concept-judge/SKILL.md) | A verdict on an existing pitch, from dated competitor evidence |
+
+### Workflow core — start here once the game is chosen
 
 | Skill | Use it for |
 |---|---|
@@ -53,12 +61,18 @@ Three rules hold across the whole library:
 | [lighting](../skills/gamedev-lighting/SKILL.md) | Light rigs, shadow budgets, presets |
 | [camera](../skills/gamedev-camera/SKILL.md) | Framing, follow rigs, shake |
 | [world-from-data](../skills/gamedev-world-from-data/SKILL.md) | Terrain, roads, rivers from height data |
+| [godot-visual-polish](../skills/gamedev-godot-visual-polish/SKILL.md) | Settings-only Godot makeover, with per-setting frame cost |
+| [foliage](../skills/gamedev-foliage/SKILL.md) | Canopy normals, wind, instanced ground cover |
+| [visual-artifacts](../skills/gamedev-visual-artifacts/SKILL.md) | Shimmer, acne, leaks, ghosting, hitches — by symptom |
+| [art-direction](../skills/gamedev-art-direction/SKILL.md) | Making mixed assets read as one game |
 
 ### Systems and shipping
 
 | Skill | Use it for |
 |---|---|
 | [gameplay-systems](../skills/gamedev-gameplay-systems/SKILL.md) | Enemies, combat, inventory, balance |
+| [boss-encounter](../skills/gamedev-boss-encounter/SKILL.md) | Boss timelines, hit windows, lock-on |
+| [audio-wire](../skills/gamedev-audio-wire/SKILL.md) | Chosen sounds wired to existing events |
 | [performance](../skills/gamedev-performance/SKILL.md) | Budgets, LOD, draw calls |
 | [godot-pipeline](../skills/gamedev-godot-pipeline/SKILL.md) | Godot 4.x import and wiring |
 | [unity-pipeline](../skills/gamedev-unity-pipeline/SKILL.md) | Unity 6 import and wiring |
@@ -69,7 +83,10 @@ Real scripts, not snippets. All run.
 
 | Tool | Purpose | Deps |
 |---|---|---|
-| [`tools/validate_skills.py`](../tools/validate_skills.py) | Lint this library: frontmatter, cross-refs, tool paths | stdlib |
+| [`tools/validate_skills.py`](../tools/validate_skills.py) | Lint this library: frontmatter, cross-refs, tool/reference paths, token caps | stdlib |
+| [`tools/token_budget.py`](../tools/token_budget.py) | Context tokens per skill: always / on use / on demand | stdlib (tiktoken optional) |
+| [`tools/godot/ablation_capture.gd`](../tools/godot/ablation_capture.gd) | Per-setting GPU/CPU ms + screenshots inside Godot | Godot 4.3+ |
+| [`tools/godot/ablation_report.py`](../tools/godot/ablation_report.py) | Cost vs visible change, net of noise | Pillow, numpy |
 | [`tools/refmatch/compare.py`](../tools/refmatch/compare.py) | Silhouette IoU, band profile, palette ΔE, aspect, SSIM | Pillow, numpy |
 | [`tools/refmatch/overlay.py`](../tools/refmatch/overlay.py) | Three-panel diagnostic sheet | Pillow, numpy |
 | [`tools/refmatch/measure_sheet.py`](../tools/refmatch/measure_sheet.py) | Clean panel + palette from a concept sheet | Pillow, numpy |

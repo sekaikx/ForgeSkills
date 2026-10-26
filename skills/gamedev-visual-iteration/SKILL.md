@@ -1,10 +1,9 @@
 ---
 name: gamedev-visual-iteration
 description: >
-  Iterate a visual artifact toward a target using measurement instead of vibes: render,
-  compare, rank discrepancies, fix one cause, re-render. Use whenever an asset, scene,
-  lighting setup or shader must match a reference or a stated look, and whenever a visual
-  task has stalled after several passes with no measurable progress.
+  Iterate a visual toward a target by measurement: render, compare, rank discrepancies, fix
+  one cause, re-render. Use when an asset, scene or shader must match a reference or look,
+  or a visual task has stalled.
 license: Apache-2.0
 compatibility: Engine-agnostic. Tooling in tools/refmatch/ (Pillow + numpy). Works with Blender, Godot, Unity renders.
 metadata:

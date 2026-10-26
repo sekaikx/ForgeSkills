@@ -1,10 +1,8 @@
 ---
 name: gamedev-world-from-data
 description: >
-  Build terrain and world layout from real data: elevation grids, spline roads, simulated
-  rivers, footprint buffers and height-field LOD. Use when building a world from GIS/DEM
-  height data, procedurally connecting settlements, or generating road/water networks that
-  must respect terrain.
+  Build terrain, roads, and rivers from real height data. Use for GIS or DEM worlds, spline
+  roads, baked flow, and footprint buffers.
 license: Apache-2.0
 compatibility: Engine-agnostic. Python tooling for height grids; target Godot 4.x or Unity 6.
 metadata:

@@ -23,3 +23,6 @@ desktop.ini
 .vscode/
 .idea/
 *.swp
+
+# Local caption copies. Techniques are cited in docs; the raw transcripts stay off the remote.
+_transcripts/

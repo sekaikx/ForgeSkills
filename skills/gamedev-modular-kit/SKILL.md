@@ -1,10 +1,8 @@
 ---
 name: gamedev-modular-kit
 description: >
-  Design and build reusable modular asset kits — walls, buildings, props — that snap
-  together on a grid, share a texture atlas, and support parameterized variants. Use when
-  building a village, interior, dungeon or any environment from repeated parts instead of
-  one-off meshes.
+  Build environments from reusable parts on a grid. Use for villages, interiors, or
+  dungeons made of repeated pieces instead of one-off meshes.
 license: Apache-2.0
 compatibility: Blender 4.2+/5.x. Grid and pivot rules apply in any engine.
 metadata:

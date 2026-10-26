@@ -1,9 +1,8 @@
 ---
 name: gamedev-lighting
 description: >
-  Light a game scene so it reads: key/fill/rim setup, shadow budget, lighting presets,
-  mood matching and diagnosis of flat or muddy lighting. Use when a scene is technically lit
-  but looks flat, when shadows cost too much, or when the light must match a reference.
+  Light a scene so it reads: key, fill, rim, and a shadow budget. Use when a scene is lit
+  but looks flat, when shadows cost too much, or when light must match a reference.
 license: Apache-2.0
 compatibility: Engine-agnostic. Examples for Blender EEVEE/Cycles and Godot 4.x.
 metadata:
@@ -161,6 +160,7 @@ dimmer" look.
 - `gamedev-camera` — exposure and framing interactions
 - `gamedev-performance` — shadow and light budgets
 - `gamedev-visual-iteration` — the loop for matching a reference
+- `gamedev-godot-visual-polish` — this theory as a Godot settings pass, with per-setting cost
 
 ## Knowledge base
 

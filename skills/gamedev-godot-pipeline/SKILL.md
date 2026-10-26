@@ -176,6 +176,8 @@ Using the render mesh as a collision shape is the most common cause of mystery p
 - `gamedev-locomotion` — the movement code that runs here
 - `gamedev-game-testing` — headless test structure
 - `gamedev-performance` — budgets measured in this engine
+- `gamedev-godot-visual-polish` — environment, lighting and post once the scene is wired
+- `gamedev-visual-artifacts` — shimmer, acne, leaks, shader hitches
 
 ## Knowledge base
 

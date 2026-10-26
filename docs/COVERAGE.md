@@ -89,21 +89,40 @@ to transcripts in [`transcript-sources.md`](transcript-sources.md).
 | T-57 camera-centric detail budgeting | ● | ○ | | ○ | ○ |
 | T-58 parameterized kit reuse | ○ | ● | ○ | | |
 
+## Group 6 — Rendering and presentation (T-59 – T-72)
+
+| Technique | Visual polish | Foliage | Artifacts | Art direction | Lighting | Performance |
+|---|:--:|:--:|:--:|:--:|:--:|:--:|
+| T-59 sun direction first | ● | | | | ○ | |
+| T-60 sky as fill light | ● | | | | ○ | |
+| T-61 tonemapper roll-off | ● | | | ○ | | |
+| T-62 contact shading judged in motion | ● | | ○ | | | |
+| T-63 GI and albedo discipline | ● | | | ○ | | |
+| T-64 fog for depth, not hiding | ● | | | | | |
+| T-65 canopy normals | ○ | ● | | | | |
+| T-66 vertex-colour wind | | ● | | | | |
+| T-67 instanced ground cover, clear paths | ○ | ● | | | | ○ |
+| T-68 character fill and practical lights | ● | | | | ○ | |
+| T-69 presence vs quality | ● | | ○ | | | ○ |
+| T-70 foundation ablation | ● | | | | | |
+| T-71 asset cohesion pass | | | | ● | | |
+| T-72 symptom-first isolation | | | ● | | | |
+
 ## Coverage summary
 
 | Skill | ● core | ○ referenced | Techniques covered |
 |---|:--:|:--:|:--:|
-| orchestrator | 3 | 4 | 7 |
+| orchestrator | 4 | 4 | 8 |
 | verification | 2 | 3 | 5 |
 | visual-iteration | 2 | 4 | 6 |
 | debugging | 2 | 1 | 3 |
-| game-testing | 1 | 2 | 3 |
+| game-testing | 2 | 2 | 4 |
 | reference-reconstruction | 5 | 3 | 8 |
-| blender-headless | 3 | 4 | 7 |
+| blender-headless | 4 | 4 | 8 |
 | procedural-modeling | 3 | 3 | 6 |
 | modular-kit | 4 | 3 | 7 |
 | texture-authoring | 4 | 1 | 5 |
-| animation | 4 | 2 | 6 |
+| animation | 4 | 3 | 7 |
 | locomotion | 2 | 3 | 5 |
 | vfx-impact | 5 | 2 | 7 |
 | lighting | 4 | 3 | 7 |
@@ -113,22 +132,65 @@ to transcripts in [`transcript-sources.md`](transcript-sources.md).
 | performance | 5 | 3 | 8 |
 | godot-pipeline | 0 | 3 | 3 |
 | unity-pipeline | 0 | 3 | 3 |
+| godot-visual-polish | 9 | 2 | 11 |
+| foliage | 3 | 0 | 3 |
+| visual-artifacts | 1 | 2 | 3 |
+| art-direction | 1 | 2 | 3 |
+| concept-judge | 1 | 0 | 1 |
+| concept-lab | 1 | 1 | 2 |
+| boss-encounter | 3 | 0 | 3 |
+| audio-wire | 1 | 0 | 1 |
 
-Every one of the 58 techniques is covered as core by at least one skill. Group 1's T-08 (pose
+Every technique from T-01 through T-72 is covered as core by at least one skill, and so are
+T-73 through T-81 (group 7). Group 1's T-08 (pose
 reference fixing) is referenced only, which is deliberate — it is a working habit rather than
 a procedure, and its one rule (fix the pose before judging the model) is stated inline in
 `visual-iteration`.
 
+## Group 7 — Direction, bosses, sound (T-73 – T-81)
+
+| Technique | Judge | Lab | Orchestrator | Testing | Blender | Boss | Animation | Audio |
+|---|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|
+| T-73 headless vs MCP vs click | | | | | ● | | | |
+| T-74 kill a greybox before art | | | ● | | | | | |
+| T-75 autopilot the designer's win | | | | ● | | | | |
+| T-76 boss attack timeline | | | | | | ● | | |
+| T-77 lock-on facing | | | | | | ● | | |
+| T-78 key pose, then in-between | | | | | | ● | ○ | |
+| T-79 wire picked audio | | | | | | | | ● |
+| T-80 market evidence before build | ● | ○ | | | | | | |
+| T-81 constraints, then one idea | ○ | ● | | | | | | |
+
+T-43 (footprint buffer) also cites S16 for snow that displaces, not only darkens. That did
+not need a new id.
+
+## Re-check of S01–S13
+
+The original caption files were searched again for audio, bosses, UI, saves, multiplayer,
+store pages, and tutorials.
+
+- Already in the technique set: greybox order, questions before combat code (S05), free
+  libraries for sound and motion (T-56), footprint buffers (T-43), palette measurement.
+- Mentioned, but not a procedure, so still not their own technique: a one-beat story
+  (meteor, S01) and "downloaded sound effects from Pixabay" with no event list (S01
+  L359-362, S09 L99-101). S14 and S16 are what turned that mention into T-79.
+- An unreported tree flicker (S09) is the existing rule that the builder does not sign off.
+- Still no procedure in the corpus for dialogue, networking, save/load, a store page, or
+  localization. Those stay gaps. They were not skipped by accident.
+
 ## Gaps in the technique set itself
 
-The 58 techniques came from 12 transcripts and are not a complete game-development curriculum.
-Notable absences:
+The first 58 techniques came from 12 transcripts. T-59–T-72 came from the Godot rendering
+video. T-73–T-79 came from three later videos (S14–S16). T-80 and T-81 are engineering:
+the build videos never decide whether a game should exist.
 
-- audio design and music
-- narrative, dialogue, quests
+Still absent as procedures:
+
+- narrative, dialogue, and quests (S01 states a story in a few lines and does not design one)
+- audio *composition* and adaptive music (wiring is T-79; writing a score is not)
 - networking and multiplayer
 - save/load architecture
-- UI layout and accessibility
+- UI layout and accessibility (aim shadows and inventory extraction already live in gameplay)
 - monetization and live-ops
 - localization
 - build distribution and store pipelines

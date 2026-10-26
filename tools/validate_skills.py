@@ -23,6 +23,8 @@ from pathlib import Path
 REQUIRED_KEYS = ("name", "description")
 RECOMMENDED = ("license", "compatibility", "metadata")
 MIN_DESC_CHARS = 60
+DESC_TOKEN_CAP = 110
+BODY_TOKEN_CAP = 2100
 
 
 def parse_frontmatter(text):
@@ -170,9 +172,22 @@ def validate(root=".", docs="docs/gamedev"):
                 issues.append(("error", f"references missing skill: {ref}"))
 
         # tool paths must exist
-        for tp in set(re.findall(r"`(tools/[A-Za-z0-9_./-]+\.py)`", body)):
+        for tp in set(re.findall(r"`(tools/[A-Za-z0-9_./-]+\.(?:py|gd))`", body)):
             if not (root / tp).exists():
                 issues.append(("error", f"references missing tool: {tp}"))
+
+        # skill-local files loaded on demand must exist
+        for lp in set(re.findall(r"`((?:references|assets)/[A-Za-z0-9_./-]+)`", body)):
+            if not (d / lp).exists():
+                issues.append(("error", f"references missing file: {lp}"))
+
+        # token cost: description is loaded every chat, body on every use
+        desc_tokens = round(len(" ".join(desc.split())) / 4)
+        body_tokens = round(len(body) / 4)
+        if desc_tokens > DESC_TOKEN_CAP:
+            issues.append(("warn", f"description ~{desc_tokens} tokens > {DESC_TOKEN_CAP} (paid in every chat)"))
+        if body_tokens > BODY_TOKEN_CAP:
+            issues.append(("warn", f"body ~{body_tokens} tokens > {BODY_TOKEN_CAP}; move tables to references/"))
 
         # transcript ids must exist in the knowledge base
         if tech_ids:

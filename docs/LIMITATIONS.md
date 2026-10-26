@@ -21,6 +21,16 @@ They are structured as checklists precisely so they can be verified on first use
 The *concepts* (verify scale in-scene, keep gameplay components off the visual root, parse
 stderr because exit 0 lies) are robust. The *keystrokes* are not verified.
 
+**Update (Godot 4.7.2 available later):** the Godot rendering material added afterwards was
+partly executed on a real game (a finished Godot 4.7 project, RTX 3050, 1280×720):
+
+- `tools/godot/ablation_capture.gd` + `ablation_report.py` ran end to end (section 12).
+- Both foliage shaders in `skills/gamedev-foliage/assets/` compile and render with no errors.
+- Everything else in `gamedev-godot-visual-polish`, `gamedev-visual-artifacts` and
+  `gamedev-foliage` is from the Godot 4.x documentation and the S13 transcript. Version notes
+  (AgX in 4.4+, its controls in 4.5+, SMAA in 4.5+) were not individually checked against
+  each release.
+
 ---
 
 ## 2. The reconstruction in this repo failed its own criteria
@@ -112,13 +122,22 @@ is a guess.
 
 ## 7. Placeholder content and scope
 
-- **20 skills, not more.** Areas not covered at all: audio design, narrative/dialogue systems,
-  multiplayer/networking, save systems, UI/UX layout, monetization, localization, build
-  distribution. `game-ui-ux`, `audio-design`, `save-systems`, `dialogue-systems` and similar
-  skills exist elsewhere in the environment but are not part of this library's tested set.
+- **28 skills.** Added after S14–S16 and a marketing-evidence pass: concept judge, concept
+  lab, boss encounters, and audio wiring. Still not covered: narrative/dialogue, multiplayer,
+  save/load, UI layout, monetization, localization, store pipelines, and writing music
+  (wiring sounds is in; composing is not). `game-ui-ux`, `audio-design`, `save-systems`,
+  and `dialogue-systems` exist elsewhere and are not part of this library's tested set.
+- **Concept judge and concept lab do not contain market numbers.** They tell the agent to
+  open store pages and date what it finds. A verdict without those pages is a failed run.
+  The evidence habits are adapted from Corey Haines' marketingskills (MIT), not copied
+  from its SaaS page templates.
+- **Boss and audio skills were not executed in an engine.** They are procedures from the
+  transcripts plus gates. Treat the checklists as unproven until a fight and a mute test
+  have been run.
 - **No project templates.** The `docs/gamedev/templates/` directory is empty. Every skill
   describes structure rather than shipping a starter project.
-- **The tooling is Python + Blender only.** No Godot or Unity automation scripts exist.
+- **The tooling is Python + Blender, plus one Godot tool** (`tools/godot/ablation_capture.gd`).
+  No Unity automation exists.
 
 ---
 

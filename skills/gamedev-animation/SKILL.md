@@ -1,10 +1,8 @@
 ---
 name: gamedev-animation
 description: >
-  Rig and animate characters and creatures: build skeletons by script, skin geometry,
-  author locomotion and action clips, and retarget between rigs. Use when a model needs to
-  move, when animation looks stiff or sliding, or when clips must be shared across
-  characters.
+  Rig, skin, and animate characters by script, including retargets. Use when a model must
+  move, when motion slides or looks stiff, or when clips are shared across characters.
 license: Apache-2.0
 compatibility: Blender 4.2+/5.x (armatures, constraints, NLA). Clips export to Godot/Unity via glTF.
 metadata:
@@ -168,6 +166,14 @@ pop = max(abs(a - b) for a, b in zip(first_pose_values, last_pose_values))
 assert pop < tolerance        # tolerance ~0.001 for rotations in radians
 ```
 
+## Poses, then in-betweens
+
+For a creature or a weapon swing that a generator gets wrong, do not ask for the whole
+move again. Author the windup, contact, and recovery poses (a drawing or a blocked
+skeleton is enough). Let mocap or a motion model fill only the frames between them. If
+one joint explodes at the end of a clip, edit that curve and leave the rest (T-78).
+Joint limits in the checklist above still apply.
+
 ## Related
 
 - `gamedev-locomotion` — the controller side that must agree with the clip
@@ -179,4 +185,4 @@ assert pop < tolerance        # tolerance ~0.001 for rotations in radians
 
 T-21 (procedural rigid-joint rigs), T-22 (movement lab), T-23 (surface transition gait
 diagnosis), T-24 (insect tripods), T-25 (locomotion blending), T-26 (retargeting libraries),
-T-27 (bone attachment constraints).
+T-27 (bone attachment constraints), T-78 (key poses, then in-betweens).

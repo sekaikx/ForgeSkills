@@ -1,10 +1,8 @@
 ---
 name: gamedev-game-testing
 description: >
-  Write tests for games and 3D assets: headless smoke tests, state-machine assertions,
-  visual regression against a reference, and automated loop tests. Use when setting up
-  verification for a project, when a bug should never return, or when "it works" needs
-  to be demonstrable.
+  Write tests for games and 3D assets: smoke tests, state assertions, visual regression,
+  and loop tests. Use when a bug must not return, or when "it works" needs proof.
 license: Apache-2.0
 compatibility: Engine-agnostic. Godot 4.x headless, Blender Python, Python + Pillow/numpy.
 metadata:
@@ -167,6 +165,18 @@ These run in milliseconds and catch the failures that are expensive to debug vis
 **Prove the test works**: break the rule deliberately and confirm the test fails. A test that
 cannot fail is documentation, not a test.
 
+## Designer-blind runs
+
+The person who built the fight is the worst tester of it. In the source, a full campaign
+win hid a reactor that never took damage: bombers fired too far out, and only three
+autopilot runs showed it (S14, T-75).
+
+After a loop is playable, run at least one scripted agent that does **not** use the
+designer's route. Assert a number the designer could have avoided without noticing
+(damage on the objective, shots that hit the target volume, a resource that actually
+moved). Same scenario, three runs. If all three miss the objective, the content is
+decorative.
+
 ## What not to test
 
 - Frame-perfect visual details (brittle, low value).
@@ -191,5 +201,5 @@ slow   (< 10 m) : layer 4 + asset gates nightly
 
 ## Knowledge base
 
-T-06 (instrumented testing), T-41 (gameplay loop test), T-48 (bot nav validation), T-51/T-52
-(breaking and multi-angle tests).
+T-06 (instrumented testing), T-44 (gameplay loop test), T-51 (bot nav validation), T-52
+(breaking tests), T-75 (autopilot on the designer's scenario).

@@ -32,14 +32,18 @@ C. Motion & animation           03-motion-and-vfx.md                   T-21..T-2
 D. Effects & feedback           03-motion-and-vfx.md                   T-29..T-34
 E. World, light & camera        04-world-lighting-and-gameplay.md      T-35..T-43
 F. Gameplay systems             04-world-lighting-and-gameplay.md      T-44..T-52
+G. Performance & pipeline       05-performance-and-pipeline.md         T-53..T-58
+H. Rendering & presentation     06-rendering-and-presentation.md       T-59..T-72
+I. Direction, bosses, sound     07-direction-boss-audio.md             T-73..T-81
 ```
 
 Coverage matrix (technique → skill → status): `coverage-matrix.md`.
 
 ## What the source material is actually about
 
-Twelve videos from one channel documenting a two-person team building a Steam survival
-game with AI agents, plus side experiments. The through-line is not "which model is best."
+Sixteen videos from one channel: a two-person team building a Steam survival game with
+AI agents, plus side experiments (a dome defence game, a Blender driver comparison, and
+an Unreal boss). The through-line is not "which model is best."
 It is **decomposition and verification**: every video that succeeds does so because the
 job was cut small, given a concrete reference, and checked by something other than the
 model that built it. Every video that fails shows the opposite — one giant prompt, no
@@ -66,4 +70,7 @@ Recorded because a skill that only describes the right path cannot diagnose the 
 | Shadow-blind lighting | 50 identical orange lamps, every wall same color, no focal point | S10 L190-201 |
 | Flipbook from stills | Still frames "just grow and fade" — no internal motion | S10 L273-276 |
 | Feature without a loop | Building system worked, but "the house had no job" | S04 L45-53 |
+| Computer-use modelling | 19 minutes and a plain box; judge score 20 vs ~30 | S15 L80-94 |
+| One mesh for a whole building | A generator will not return a clean church; split it like a kit | S16 L89-104 |
+| Designer-only playtest | Campaign "won" while the objective never took damage | S14 L193-208 |
 | Money-mode animation | Root motion baked in → feet slid in game; spear bent like a bow | S11 L132-142 |

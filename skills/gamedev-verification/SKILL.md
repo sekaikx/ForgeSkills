@@ -1,10 +1,8 @@
 ---
 name: gamedev-verification
 description: >
-  Prove that work is actually finished before claiming it. Use before reporting a task
-  complete, before handing off, and whenever a tool returned "success" but you have not
-  looked at the result. Covers artifact-level evidence, engine-level smoke tests,
-  regression checks, and the specific ways AI-assisted game work reports false success.
+  Prove work is finished before claiming it. Use before reporting done, before handoff, or
+  when a tool said success and you have not looked at the result.
 license: Apache-2.0
 compatibility: Engine-agnostic. Examples for Godot 4.x, Unity 6, Blender 4.x/5.x.
 metadata:
@@ -59,6 +57,12 @@ expected material count and forward axis.
 [ ] materials: count and names survive export; textures are packed or copied
 [ ] topology: tri count within budget; no non-manifold explosion
 [ ] import test: load in the target engine, not just the exporter's log
+[ ] re-import gate: after writing the delivery file (OBJ/GLB/FBX), load that file fresh and
+    measure bounds/silhouette from the loaded geometry — never from the in-memory mesh or an
+    intermediate profile array you used to build it
+[ ] orientation sanity: for rotationally symmetric props, the radius-max row as a fraction of
+    height (0 = base, 1 = top) must match the reference within ~0.10; a value near 1.0 − ref
+    usually means the profile was flipped when mapping image rows to world Y
 ```
 
 Do not trust `ob.bound_box` right after a script edits a mesh — it is cached and reports the

@@ -4,10 +4,12 @@ Entries T-09 … T-15. Continued in `02b-assets-and-textures.md`.
 
 ---
 
-## T-09 — Headless Blender scripting (no MCP)
+## T-09 — Headless Blender scripting (pipeline default)
 
-**Problem.** Agents that cannot drive a GUI stall on 3D work. MCP-based control adds a
-brittle transport layer and a session the agent must keep alive.
+**Problem.** Agents that cannot drive a GUI stall on 3D work. A live session also cannot
+fan out: one Blender is one queue. Headless stays the default for batches. For a single
+prop you want to watch, see T-73 — a later test found MCP faster there, and computer-use
+worse.
 
 **Why it works.** Blender ships a Python interpreter. The agent writes a `.py` file and
 Blender runs it with `-b` (background). The artifact is a saved `.blend`, so the process

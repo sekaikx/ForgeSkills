@@ -225,7 +225,7 @@ dangling `palette_report.py` reference during this library's own build.
 
 ## Where to go next
 
-- [`README.md`](README.md) — the index of all 20 skills
+- [`README.md`](README.md) — the index of the skills
 - [`TEST_RESULTS.md`](TEST_RESULTS.md) — what was actually run, including the failure
 - [`LIMITATIONS.md`](LIMITATIONS.md) — read this before trusting a skill
 - [`COVERAGE.md`](COVERAGE.md) — skill × technique matrix
