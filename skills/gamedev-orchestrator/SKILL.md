@@ -1,8 +1,8 @@
 ---
 name: gamedev-orchestrator
 description: >
-  Plan a multi-stage game or asset task from brief to verified build: stages, which skills
-  apply, acceptance gates. Use at the start of any non-trivial game task, or when one is
+  Plan a multi-stage game or asset task, or a whole game from idea to launch: stages, which
+  skills apply, data gates. Use at the start of any non-trivial game task, or when one is
   stalling or sprawling.
 license: Apache-2.0
 compatibility: Engine-agnostic. Works with Godot 4.x, Unity 6, Blender 4.x/5.x.
@@ -58,6 +58,10 @@ will debug in an hour.
 spend stages 4–8 on a pitch with no verdict. If two greyboxes already exist, play both
 and keep one before any art (T-74): the source threw out two worlds after playing them.
 
+**Idea to launch.** For a whole game, not one task, run the phase map in
+`references/lifecycle.md`: idea, verdict, prototype, playtest, page, marketing, launch. Each
+phase ends at a gate graded by `gamedev-critic` on data, not on how the team feels.
+
 ## Step 2 — Decompose into stages with artifacts
 
 Each stage must own **one artifact** and **one gate**. A stage without an artifact is not a
@@ -100,6 +104,12 @@ redo and the most tempting to start with — do it last.
 | Unity project wiring | `gamedev-unity-pipeline` |
 | Something is broken | `gamedev-debugging` |
 | Proving it works | `gamedev-verification`, `gamedev-game-testing` |
+| Events the build must log | `gamedev-telemetry` |
+| Bots and agents playing the build | `gamedev-playtest-agents` |
+| Playtest numbers into a decision | `gamedev-playtest-analysis` |
+| Store page, capsule, trailer | `gamedev-store-page` |
+| Wishlists, channels, launch beats | `gamedev-marketing-loop` |
+| Grading any claim at a gate | `gamedev-critic` |
 
 Load one at a time. Loading five produces mush.
 

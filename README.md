@@ -6,7 +6,7 @@
 
 An agent will say the scene looks good. ForgeSkills makes it show the picture and the number.
 
-28 skills for agents that write code, drive Blender, and ship game assets. Each one is a procedure with a gate: what to do, in what order, what to measure, and what counts as done. The opening score in the loop above, **0.46**, is a real result from this repo. The climb is the loop the skills run. The character those tools were aimed at never reached the 0.85 gate, and that failure is kept on purpose. See [`docs/TEST_RESULTS.md`](docs/TEST_RESULTS.md).
+34 skills for agents that take a game from idea to launch: judge the idea, build it, let bots and agents play it, read the data, then sell it. Each one is a procedure with a gate: what to do, in what order, what to measure, and what counts as done. The opening score in the loop above, **0.46**, is a real result from this repo. The climb is the loop the skills run. The character those tools were aimed at never reached the 0.85 gate, and that failure is kept on purpose. See [`docs/TEST_RESULTS.md`](docs/TEST_RESULTS.md).
 
 ```
 measure → build → render → compare → fix one thing → repeat
@@ -23,8 +23,9 @@ ForgeSkills is the stop.
 - **A stage is an artifact.** A greybox, a render, a log, a competitor row with a date. A step with nothing you can open is not a step.
 - **One change, then measure.** Two fixes in one pass teach nothing, because you cannot tell which one moved the number.
 - **The builder does not grade itself.** A second check looks at the picture, the mesh, or the log. "Script exited 0" is not that check.
+- **Data, not feelings.** Bots and agents play the build and log events. A tool turns those logs into a funnel with confidence intervals, and the gate reads the low end of the interval, not the average. A critic skill grades every claim before money or months get spent.
 - **A new game is a market question first.** If you do not have a game yet, the agent asks what you can finish, opens store pages, and recommends one idea. It does not invent twenty themes.
-- **Context stays small.** Descriptions are routing text, about 1,714 tokens for all 28, loaded so the agent can pick. The procedure loads only when that skill is chosen. Long tables stay in `references/` until a step asks for them. See [`docs/TOKEN_EFFICIENCY.md`](docs/TOKEN_EFFICIENCY.md).
+- **Context stays small.** Descriptions are routing text, about 2,140 tokens for all 34, loaded so the agent can pick. The procedure loads only when that skill is chosen. Long tables stay in `references/` until a step asks for them. See [`docs/TOKEN_EFFICIENCY.md`](docs/TOKEN_EFFICIENCY.md).
 
 ---
 
@@ -60,6 +61,22 @@ Same model, same brief, one variable: whether the agent read `gamedev-art-direct
 
 The skills changed the method more than the picture. One pass is not the loop this library is built on, so this is a small result, not proof. Details and sources: [`docs/AB_TEST.md`](docs/AB_TEST.md), [`examples/ab-campfire/`](examples/ab-campfire/).
 
+### What "data, not feelings" looks like
+
+Synthetic playtest, 80 human players. The point estimate for finishing level 1 is 60.6%, which looks like it clears a 60% bar. The gate reads the low end of the interval instead:
+
+```bash
+python tools/analytics/playtest_report.py human.jsonl bot.jsonl \
+  --funnel tutorial_done,level_1_done,level_2_done --gate "level_1_done>=0.6"
+```
+
+```
+| level_1_done | 71 | 43 | 60.6% | 48.9% - 71.1% |
+FAIL: [human] level_1_done lower 95% bound 0.489 < 0.600 (point 0.606, n=71)
+```
+
+Exit code 1. With this many players you can't tell 60% from 49%. The answer is "get more players or fix level 1", not "ship it". Human and bot results are always reported separately.
+
 ---
 
 ## Where to enter
@@ -87,6 +104,10 @@ flowchart LR
 | A boss that feels random | `gamedev-boss-encounter` |
 | Proof, not a status line | `gamedev-verification` |
 | A bug that must not return | `gamedev-debugging` → `gamedev-game-testing` |
+| Bots and agents playing the build | `gamedev-telemetry` → `gamedev-playtest-agents` |
+| "Is it working?" answered with numbers | `gamedev-playtest-analysis` |
+| A store page and a launch plan | `gamedev-store-page` → `gamedev-marketing-loop` |
+| Someone to argue against the plan | `gamedev-critic` |
 
 You do not have to name them. "Rebuild this character sheet as a 3D model" matches `gamedev-reference-reconstruction` on its own.
 
@@ -102,6 +123,8 @@ You do not have to name them. "Rebuild this character sheet as a 3D model" match
 | **Motion and feel** | `gamedev-animation`, `gamedev-locomotion`, `gamedev-vfx-impact` |
 | **World and presentation** | `gamedev-lighting`, `gamedev-camera`, `gamedev-world-from-data`, `gamedev-godot-visual-polish`, `gamedev-foliage`, `gamedev-visual-artifacts`, `gamedev-art-direction` |
 | **Systems and shipping** | `gamedev-gameplay-systems`, `gamedev-boss-encounter`, `gamedev-audio-wire`, `gamedev-performance`, `gamedev-godot-pipeline`, `gamedev-unity-pipeline` |
+| **Playtest and data** | `gamedev-telemetry`, `gamedev-playtest-agents`, `gamedev-playtest-analysis`, `gamedev-critic` |
+| **Market** | `gamedev-store-page`, `gamedev-marketing-loop` |
 
 Full index: [`docs/README.md`](docs/README.md).
 
@@ -181,6 +204,28 @@ Full index: [`docs/README.md`](docs/README.md).
 
 </details>
 
+<details>
+<summary><b>Playtest and data</b> — answers from logs, not from the developer's mood</summary>
+
+| Skill | Solves |
+|---|---|
+| `gamedev-telemetry` | "We don't know where players quit." One event schema, written as JSONL, checked to fire before anyone plays. |
+| `gamedev-playtest-agents` | Nobody has played the build. Bots for crashes and soft-locks, agent players with persona cards, humans for feel. Agents report events, never ratings. |
+| `gamedev-playtest-analysis` | "Testers liked it." Funnel, drop-off, deaths per level, 95% intervals, build-versus-build tests. KEEP, CHANGE, CUT, or NEED MORE DATA. |
+| `gamedev-critic` | A plan nobody argued with. Grades each claim's evidence, checks for survivorship bias, sunk cost and vanity metrics, and leads with the biggest risk. |
+
+</details>
+
+<details>
+<summary><b>Market</b></summary>
+
+| Skill | Solves |
+|---|---|
+| `gamedev-store-page` | A page built on taste. Five competitor teardowns, a draft, tracked links, one change at a time measured by visit-to-wishlist conversion. |
+| `gamedev-marketing-loop` | Marketing as hope. One number, a channel table, a beat calendar, a recap after each beat, and channels cut when they don't move the number. |
+
+</details>
+
 ---
 
 ## Install
@@ -239,7 +284,7 @@ Type `/` in Agent chat and pick a skill by name.
 | Windsurf, Cline, Roo | Point the skill directory at `skills/`, or copy the folders |
 | Anything else | One folder per skill, `SKILL.md` inside, YAML frontmatter with `name` and `description` |
 
-If your agent only supports one rules file, concatenate the skills you need. All 28 at once defeats the routing.
+If your agent only supports one rules file, concatenate the skills you need. All 34 at once defeats the routing.
 
 ### Tooling path
 
@@ -296,6 +341,8 @@ Check scripts exit nonzero on a failed check. `token_budget.py` does so only wit
 | `tools/blender/render_compare_views.py` | Turnaround renders, fixed camera, alpha |
 | `tools/blender/validate_scene.py` | Stray geometry, scale, meshes under the floor |
 | `tools/blender/explorer_build.py` | Worked example of a garment pass |
+| `tools/analytics/playtest_report.py` | Funnel, drop-off, deaths, Wilson intervals, build A/B test, gate on the lower bound |
+| `tools/analytics/sample_events.py` | Seeded synthetic events for demos and tests |
 
 ```
 measure_sheet → character_blockout → validate_scene → render_compare_views
@@ -307,7 +354,7 @@ python tools/validate_skills.py
 ```
 
 ```
-SKILL LIBRARY VALIDATION — 28 skills, 81 techniques known
+SKILL LIBRARY VALIDATION — 34 skills, 81 techniques known
 ERRORS 0   WARNINGS 0
 ```
 
@@ -332,7 +379,8 @@ Read [`docs/LIMITATIONS.md`](docs/LIMITATIONS.md) before trusting this with a sh
 - **One A/B:** skills vs no skills on the same brief. Mixed result, written up in [`docs/AB_TEST.md`](docs/AB_TEST.md).
 - **CI:** the validator and unit tests for the measurement tools run on every push.
 - **Failed its own test:** silhouette IoU 0.46 against a required 0.85. Documented, not deleted.
-- **Not in this library:** dialogue, multiplayer, save systems, store-page production, writing music. Sound *wiring* is in. Composition is not.
+- **New and not yet used on a shipped game:** the playtest, data and market skills. The analytics tool is unit-tested on synthetic data. The bot snippets have not been run in an engine.
+- **Not in this library:** dialogue, multiplayer, save systems, writing music. Sound *wiring* is in. Composition is not.
 
 ---
 
@@ -340,13 +388,13 @@ Read [`docs/LIMITATIONS.md`](docs/LIMITATIONS.md) before trusting this with a sh
 
 ```
 ForgeSkills/
-├── skills/                    28 skills, one folder each
+├── skills/                    34 skills, one folder each
 │   └── gamedev-<name>/SKILL.md   (+ references/ and assets/, loaded on demand)
 ├── tools/                     measurement, Blender, Godot ablation, this README's loop
 ├── tests/                     unit tests for the measurement tools
 ├── examples/ab-campfire/      the A/B scenes above
 └── docs/
-    ├── README.md              index of all 28 skills
+    ├── README.md              index of all 34 skills
     ├── TOKEN_EFFICIENCY.md    what the skills cost in context, and what they save
     ├── USAGE.md               worked command lines
     ├── TEST_RESULTS.md        what was run, including what failed

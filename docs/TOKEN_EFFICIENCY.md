@@ -20,14 +20,15 @@ Measure it yourself: `python tools/token_budget.py` (uses `tiktoken` if installe
 `python tools/token_budget.py` uses about 4 characters per token unless `tiktoken` is installed.
 The table below is chars/4 from that script.
 
-| | 24 skills, before this trim | 28 skills, after |
-|---|---:|---:|
-| Always loaded (all descriptions) | 1,530 | 1,714 |
-| Largest skill body | 2,063 | 2,063 |
-| Typical task (descriptions + 2 median bodies) | — | 4,716 |
+| | 24 skills, before this trim | 28 skills, after | 34 skills |
+|---|---:|---:|---:|
+| Always loaded (all descriptions) | 1,530 | 1,714 | 2,141 |
+| Largest skill body | 2,063 | 2,063 | 2,078 |
+| Typical task (descriptions + 2 median bodies) | — | 4,716 | 5,066 |
 
 The 28-skill column was 1,564 / 4,552 before the routing rewrite. Descriptions that name the
 neighbouring skill to use instead cost about 150 more tokens; that is the price of fewer misroutes.
+The six playtest, data and market skills add about 430 tokens of descriptions.
 
 Both columns are chars/4, measured with `token_budget.py` in the same way. Four new
 descriptions cost about 216 tokens. Cutting the longest old descriptions paid for almost

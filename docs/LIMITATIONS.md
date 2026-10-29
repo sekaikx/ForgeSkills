@@ -121,9 +121,13 @@ is a guess.
 
 ## 7. Placeholder content and scope
 
-- **28 skills.** Added after S14–S16 and a marketing-evidence pass: concept judge, concept
-  lab, boss encounters, and audio wiring. Still not covered: narrative/dialogue, multiplayer,
-  save/load, UI layout, monetization, localization, store pipelines, and writing music
+- **34 skills.** Added after S14–S16 and a marketing-evidence pass: concept judge, concept
+  lab, boss encounters, and audio wiring. Then six engineering skills with no transcript
+  source: telemetry, playtest agents, playtest analysis, critic, store page, marketing loop.
+  They are not in the COVERAGE matrix. Only `tools/analytics/` is tested (unit tests on
+  synthetic data); the engine snippets and the market steps have not been used on a
+  shipped game. Still not covered: narrative/dialogue, multiplayer,
+  save/load, UI layout, monetization, localization, and writing music
   (wiring sounds is in; composing is not). `game-ui-ux`, `audio-design`, `save-systems`,
   and `dialogue-systems` exist elsewhere and are not part of this library's tested set.
 - **Concept judge and concept lab do not contain market numbers.** They tell the agent to

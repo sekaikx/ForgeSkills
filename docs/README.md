@@ -1,6 +1,6 @@
 # AI Game Development Skills Library
 
-28 executable skills for AI agents doing game and 3D asset work, plus the tooling that makes
+34 executable skills for agents taking a game from idea to launch, plus the tooling that makes
 their claims checkable. Every technique traces back to the 16 analysed transcripts or is
 labelled as an engineering addition — see
 [`transcript-sources.md`](transcript-sources.md) and the
@@ -35,6 +35,22 @@ Three rules hold across the whole library:
 | [visual-iteration](../skills/gamedev-visual-iteration/SKILL.md) | Closing the loop on any visual target |
 | [debugging](../skills/gamedev-debugging/SKILL.md) | Finding the cause instead of the symptom |
 | [game-testing](../skills/gamedev-game-testing/SKILL.md) | Tests for logic, state, scenes and renders |
+
+### Playtest and data — answers from logs
+
+| Skill | Use it for |
+|---|---|
+| [telemetry](../skills/gamedev-telemetry/SKILL.md) | The event schema, logged before anyone plays |
+| [playtest-agents](../skills/gamedev-playtest-agents/SKILL.md) | Bots and agent players that produce events, not opinions |
+| [playtest-analysis](../skills/gamedev-playtest-analysis/SKILL.md) | Funnels, intervals and build comparisons turned into decisions |
+| [critic](../skills/gamedev-critic/SKILL.md) | Grading the evidence behind any claim at a gate |
+
+### Market
+
+| Skill | Use it for |
+|---|---|
+| [store-page](../skills/gamedev-store-page/SKILL.md) | A page measured by visit-to-wishlist conversion |
+| [marketing-loop](../skills/gamedev-marketing-loop/SKILL.md) | Channels and beats kept or cut on the numbers |
 
 ### Assets
 
