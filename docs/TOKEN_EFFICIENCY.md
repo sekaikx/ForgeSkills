@@ -22,7 +22,7 @@ The table below is chars/4 from that script.
 
 | | 24 skills, before this trim | 28 skills, after | 34 skills |
 |---|---:|---:|---:|
-| Always loaded (all descriptions) | 1,530 | 1,714 | 2,141 |
+| Always loaded (all descriptions) | 1,530 | 1,714 | 2,141 (34) · 2,281 (36) |
 | Largest skill body | 2,063 | 2,063 | 2,078 |
 | Typical task (descriptions + 2 median bodies) | — | 4,716 | 5,066 |
 

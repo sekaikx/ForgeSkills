@@ -58,6 +58,7 @@ For each, state found or not found, with the quote:
 - Vanity metrics: views, followers, likes with no shown link to wishlists or sales.
 - Small n: under 30 per group, no interval.
 - Peeking: stopped or changed the gate after seeing data.
+- Simulation as data: simulated players, sales or retention cited as if observed.
 
 ## Step 4 — Lead with the risk (output)
 

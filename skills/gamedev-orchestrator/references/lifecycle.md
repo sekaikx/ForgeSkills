@@ -11,6 +11,7 @@ a date, or it is a guess and cannot be a gate.
 |---|---|---|---|---|
 | 0 | Idea | `gamedev-concept-lab` | one loop + one twist, with constraints | fits team, months, engine |
 | 1 | Verdict | `gamedev-concept-judge`, `gamedev-critic` | competitor table, BUILD / NARROW / STOP | BUILD, and the critic finds no unsupported claim it rests on |
+| 1b | Hook test | `gamedev-hook-test` | 3–5 greybox clips per hook, tracked results | primary number above the gate written before posting |
 | 2 | Prototype | `gamedev-orchestrator`, `gamedev-gameplay-systems`, `gamedev-verification` | greybox of the core verb | loop runs end to end, headless check passes |
 | 3 | Instrument | `gamedev-telemetry` | event schema + JSONL from one real session | every funnel event fires once in a test run |
 | 4 | Bot pass | `gamedev-playtest-agents` | bot and agent JSONL, stuck screenshots | 0 crashes and 0 soft-locks across the planned runs |
@@ -25,6 +26,7 @@ a date, or it is a guess and cannot be a gate.
 - Phase 5 says nobody finishes the tutorial: fix the first ten minutes before any art.
 - Phase 6 or 7 shows no conversion after a fair try: back to phase 1 with the new data.
   Spending more on marketing a game that does not convert hides the problem.
+- A build exists but the idea has no identity: `gamedev-pivot`, then phase 1b.
 
 ## What agents can and cannot answer
 

@@ -1,6 +1,6 @@
 # AI Game Development Skills Library
 
-34 executable skills for agents taking a game from idea to launch, plus the tooling that makes
+36 executable skills for agents taking a game from idea to launch, plus the tooling that makes
 their claims checkable. Every technique traces back to the 16 analysed transcripts or is
 labelled as an engineering addition — see
 [`transcript-sources.md`](transcript-sources.md) and the
@@ -25,6 +25,8 @@ Three rules hold across the whole library:
 |---|---|
 | [concept-lab](../skills/gamedev-concept-lab/SKILL.md) | New ideas, only after constraints and a store scan |
 | [concept-judge](../skills/gamedev-concept-judge/SKILL.md) | A verdict on an existing pitch, from dated competitor evidence |
+| [pivot](../skills/gamedev-pivot/SKILL.md) | A build with no identity: salvage it into one game |
+| [hook-test](../skills/gamedev-hook-test/SKILL.md) | Greybox clips to real strangers, measured, before production |
 
 ### Workflow core — start here once the game is chosen
 

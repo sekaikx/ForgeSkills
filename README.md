@@ -6,7 +6,7 @@
 
 An agent will say the scene looks good. ForgeSkills makes it show the picture and the number.
 
-34 skills for agents that take a game from idea to launch: judge the idea, build it, let bots and agents play it, read the data, then sell it. Each one is a procedure with a gate: what to do, in what order, what to measure, and what counts as done. The opening score in the loop above, **0.46**, is a real result from this repo. The climb is the loop the skills run. The character those tools were aimed at never reached the 0.85 gate, and that failure is kept on purpose. See [`docs/TEST_RESULTS.md`](docs/TEST_RESULTS.md).
+36 skills for agents that take a game from idea to launch: judge the idea, build it, let bots and agents play it, read the data, then sell it. Each one is a procedure with a gate: what to do, in what order, what to measure, and what counts as done. The opening score in the loop above, **0.46**, is a real result from this repo. The climb is the loop the skills run. The character those tools were aimed at never reached the 0.85 gate, and that failure is kept on purpose. See [`docs/TEST_RESULTS.md`](docs/TEST_RESULTS.md).
 
 ```
 measure → build → render → compare → fix one thing → repeat
@@ -25,7 +25,7 @@ ForgeSkills is the stop.
 - **The builder does not grade itself.** A second check looks at the picture, the mesh, or the log. "Script exited 0" is not that check.
 - **Data, not feelings.** Bots and agents play the build and log events. A tool turns those logs into a funnel with confidence intervals, and the gate reads the low end of the interval, not the average. A critic skill grades every claim before money or months get spent.
 - **A new game is a market question first.** If you do not have a game yet, the agent asks what you can finish, opens store pages, and recommends one idea. It does not invent twenty themes.
-- **Context stays small.** Descriptions are routing text, about 2,140 tokens for all 34, loaded so the agent can pick. The procedure loads only when that skill is chosen. Long tables stay in `references/` until a step asks for them. See [`docs/TOKEN_EFFICIENCY.md`](docs/TOKEN_EFFICIENCY.md).
+- **Context stays small.** Descriptions are routing text, about 2,280 tokens for all 36, loaded so the agent can pick. The procedure loads only when that skill is chosen. Long tables stay in `references/` until a step asks for them. See [`docs/TOKEN_EFFICIENCY.md`](docs/TOKEN_EFFICIENCY.md).
 
 ---
 
@@ -97,6 +97,7 @@ flowchart LR
 | You want | Run |
 |---|---|
 | Ideas, and you have not chosen a game | `gamedev-concept-lab` |
+| A build that exists but feels like the wrong game | `gamedev-pivot` → `gamedev-hook-test` |
 | A verdict before anyone models a tree | `gamedev-concept-judge` |
 | A brief turned into stages | `gamedev-orchestrator` |
 | An asset that matches a picture | `gamedev-reference-reconstruction` → `gamedev-visual-iteration` |
@@ -117,7 +118,7 @@ You do not have to name them. "Rebuild this character sheet as a 3D model" match
 
 | Group | Skills |
 |---|---|
-| **Direction** | `gamedev-concept-lab`, `gamedev-concept-judge` |
+| **Direction** | `gamedev-concept-lab`, `gamedev-concept-judge`, `gamedev-pivot`, `gamedev-hook-test` |
 | **Workflow** | `gamedev-orchestrator`, `gamedev-verification`, `gamedev-visual-iteration`, `gamedev-debugging`, `gamedev-game-testing` |
 | **Assets** | `gamedev-reference-reconstruction`, `gamedev-blender-headless`, `gamedev-procedural-modeling`, `gamedev-modular-kit`, `gamedev-texture-authoring` |
 | **Motion and feel** | `gamedev-animation`, `gamedev-locomotion`, `gamedev-vfx-impact` |
@@ -135,6 +136,8 @@ Full index: [`docs/README.md`](docs/README.md).
 |---|---|
 | `gamedev-concept-lab` | "What should I make?" Asks team, time, engine, and refusals, scans shipped games, then recommends one loop plus one twist. |
 | `gamedev-concept-judge` | "Is this worth building?" Five dated competitors, scores tagged as fact or inference, then BUILD, NARROW, or STOP. |
+| `gamedev-pivot` | Months of build, no identity. Inventory what exists, find the hook already in it, score options on reuse and evidence, cut the rest. |
+| `gamedev-hook-test` | "Would strangers care?" Greybox clips to real people, gates written before posting, GO, ITERATE, or KILL. |
 
 </details>
 
@@ -284,7 +287,7 @@ Type `/` in Agent chat and pick a skill by name.
 | Windsurf, Cline, Roo | Point the skill directory at `skills/`, or copy the folders |
 | Anything else | One folder per skill, `SKILL.md` inside, YAML frontmatter with `name` and `description` |
 
-If your agent only supports one rules file, concatenate the skills you need. All 34 at once defeats the routing.
+If your agent only supports one rules file, concatenate the skills you need. All 36 at once defeats the routing.
 
 ### Tooling path
 
@@ -354,7 +357,7 @@ python tools/validate_skills.py
 ```
 
 ```
-SKILL LIBRARY VALIDATION — 34 skills, 81 techniques known
+SKILL LIBRARY VALIDATION — 36 skills, 81 techniques known
 ERRORS 0   WARNINGS 0
 ```
 
@@ -388,13 +391,13 @@ Read [`docs/LIMITATIONS.md`](docs/LIMITATIONS.md) before trusting this with a sh
 
 ```
 ForgeSkills/
-├── skills/                    34 skills, one folder each
+├── skills/                    36 skills, one folder each
 │   └── gamedev-<name>/SKILL.md   (+ references/ and assets/, loaded on demand)
 ├── tools/                     measurement, Blender, Godot ablation, this README's loop
 ├── tests/                     unit tests for the measurement tools
 ├── examples/ab-campfire/      the A/B scenes above
 └── docs/
-    ├── README.md              index of all 34 skills
+    ├── README.md              index of all 36 skills
     ├── TOKEN_EFFICIENCY.md    what the skills cost in context, and what they save
     ├── USAGE.md               worked command lines
     ├── TEST_RESULTS.md        what was run, including what failed

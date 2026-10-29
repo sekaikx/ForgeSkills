@@ -121,9 +121,10 @@ is a guess.
 
 ## 7. Placeholder content and scope
 
-- **34 skills.** Added after S14–S16 and a marketing-evidence pass: concept judge, concept
-  lab, boss encounters, and audio wiring. Then six engineering skills with no transcript
-  source: telemetry, playtest agents, playtest analysis, critic, store page, marketing loop.
+- **36 skills.** Added after S14–S16 and a marketing-evidence pass: concept judge, concept
+  lab, boss encounters, and audio wiring. Then eight engineering skills with no transcript
+  source: telemetry, playtest agents, playtest analysis, critic, store page, marketing loop,
+  pivot, hook test.
   They are not in the COVERAGE matrix. Only `tools/analytics/` is tested (unit tests on
   synthetic data); the engine snippets and the market steps have not been used on a
   shipped game. Still not covered: narrative/dialogue, multiplayer,
