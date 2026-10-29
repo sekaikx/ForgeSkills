@@ -1,9 +1,9 @@
 ---
 name: gamedev-concept-judge
 description: >
-  Judge a game idea before building it, using dated competitor prices, review counts, and
-  player complaints. Use when asked if a game is worth making, who would buy it, what to
-  cut, or whether a pitch should change.
+  Judge an existing game idea before building it, using dated competitor prices, review
+  counts, and player complaints. Use when asked if a game is worth making, who would buy
+  it, or what to cut. To generate ideas use concept-lab.
 license: Apache-2.0
 compatibility: Engine-agnostic. Needs web search. No store account required.
 metadata:

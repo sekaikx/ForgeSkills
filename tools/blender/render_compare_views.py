@@ -6,10 +6,12 @@ at a matched aspect ratio, so every iteration is judged from the same viewpoint.
 
 Usage inside a live Blender session:
     exec(open(r"...\\render_compare_views.py").read())
-    render_turnaround("out/", height=1.80)
+    render_turnaround("out/")
 
 Usage headless:
-    blender -b file.blend -P render_compare_views.py -- --out out/ --height 1.80
+    blender -b file.blend -P render_compare_views.py -- --out out/
+
+Camera distance and light scale come from the scene bounds, so no height is passed.
 """
 
 import bpy
@@ -156,7 +158,7 @@ VIEWS = {
 }
 
 
-def render_turnaround(out_dir, height=1.80, views=None, lens_mm=85.0):
+def render_turnaround(out_dir, views=None, lens_mm=85.0):
     os.makedirs(out_dir, exist_ok=True)
     cam, center, dist, h = setup_camera(lens_mm=lens_mm)
     setup_lighting(center, h)
@@ -183,7 +185,6 @@ def render_turnaround(out_dir, height=1.80, views=None, lens_mm=85.0):
 if __name__ == "__main__":
     import sys
     out = "out"
-    h = 1.80
     a = sys.argv
     if "--" in a:
         i = a.index("--")
@@ -191,6 +192,4 @@ if __name__ == "__main__":
         for j, tok in enumerate(rest):
             if tok == "--out":
                 out = rest[j + 1]
-            if tok == "--height":
-                h = float(rest[j + 1])
-    render_turnaround(out, height=h)
+    render_turnaround(out)

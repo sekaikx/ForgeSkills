@@ -1,9 +1,10 @@
 ---
 name: gamedev-reference-reconstruction
 description: >
-  Rebuild a reference image as a real 3D asset matching its silhouette, proportions,
-  palette and lighting, with measured acceptance and a re-render loop. Use when given a
-  concept sheet, turnaround or photo and asked to build that specific thing.
+  Rebuild a reference image as a real 3D asset matching its silhouette, proportions and
+  palette, with measured acceptance. Use when given a concept sheet, turnaround or photo
+  and asked to build that specific thing from scratch. For stalled iteration on an
+  existing asset use visual-iteration.
 license: Apache-2.0
 compatibility: Engine-agnostic. Measured with tools/refmatch/*.py (Python 3.10+, Pillow, numpy). Blender 4.x/5.x and Godot 4.x bindings included.
 metadata:

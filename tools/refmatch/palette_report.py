@@ -37,6 +37,8 @@ def hex_of(rgb):
 
 def hex_to_rgb(h):
     h = h.lstrip("#")
+    if len(h) == 3:
+        h = "".join(c * 2 for c in h)
     return tuple(int(h[i:i + 2], 16) / 255.0 for i in (0, 2, 4))
 
 

@@ -24,7 +24,7 @@ ForgeSkills is the stop.
 - **One change, then measure.** Two fixes in one pass teach nothing, because you cannot tell which one moved the number.
 - **The builder does not grade itself.** A second check looks at the picture, the mesh, or the log. "Script exited 0" is not that check.
 - **A new game is a market question first.** If you do not have a game yet, the agent asks what you can finish, opens store pages, and recommends one idea. It does not invent twenty themes.
-- **Context stays small.** Descriptions are routing text, about 1,564 tokens for all 28, loaded so the agent can pick. The procedure loads only when that skill is chosen. Long tables stay in `references/` until a step asks for them. See [`docs/TOKEN_EFFICIENCY.md`](docs/TOKEN_EFFICIENCY.md).
+- **Context stays small.** Descriptions are routing text, about 1,714 tokens for all 28, loaded so the agent can pick. The procedure loads only when that skill is chosen. Long tables stay in `references/` until a step asks for them. See [`docs/TOKEN_EFFICIENCY.md`](docs/TOKEN_EFFICIENCY.md).
 
 ---
 
@@ -42,6 +42,23 @@ This is a comparison of behaviour, not a claim about revenue or a benchmark win.
 | What the chat carries | Every retry | The whole file, every time | A short description until the skill is actually needed |
 
 What you give up: speed on the first attempt. A gated pass is slower than a single prompt. It is faster than the third rewrite of a scene nobody measured.
+
+### One A/B, run on purpose
+
+Same model, same brief, one variable: whether the agent read `gamedev-art-direction` and `gamedev-lighting` first.
+
+<p align="center">
+  <img src="docs/media/ab-campfire.png" width="800" alt="Left: no skills, high contrast, hard orange horizon. Right: with skills, one muted palette, fog, the fire as the only warm accent, but a washed-out tent.">
+</p>
+
+| | No skills | With skills |
+|---|---|---|
+| Palette | Generic, hard horizon | One palette, fire is the only accent |
+| Lighting | Ad hoc | Key / fill 4:1 / rim, matched fog |
+| Weak spot | Flat colour choices | Lower contrast, washed-out tent, shadow patches |
+| Cost | ~66k tokens, 45 s | ~80k tokens, 72 s (+20%) |
+
+The skills changed the method more than the picture. One pass is not the loop this library is built on, so this is a small result, not proof. Details and sources: [`docs/AB_TEST.md`](docs/AB_TEST.md), [`examples/ab-campfire/`](examples/ab-campfire/).
 
 ---
 
@@ -243,7 +260,7 @@ Skip this and the procedures still read. The measurement steps need the scripts.
 ## Requirements
 
 ```bash
-pip install pillow numpy
+pip install -r requirements.txt
 ```
 
 | Component | Needs |
@@ -260,7 +277,7 @@ Regenerate the header loop with `python tools/readme_hero.py`.
 
 ## Tooling
 
-Each script exits nonzero on a failed check.
+Check scripts exit nonzero on a failed check. `token_budget.py` does so only with `--strict`.
 
 | Script | What it measures |
 |---|---|
@@ -311,8 +328,9 @@ The validator failed itself once, by reporting zero errors after finding zero sk
 Read [`docs/LIMITATIONS.md`](docs/LIMITATIONS.md) before trusting this with a ship date.
 
 - **Exercised:** the workflow, the Blender pitfalls, the comparison and texture tools. Bugs in those tools were found by running them.
-- **Run in Godot 4.7.2:** the ablation capture and both foliage shaders.
-- **Written, not executed here:** the Godot and Unity pipeline checklists. Treat them as a spec until you run them.
+- **Written, not executed here:** everything Godot and Unity, including the ablation capture and both foliage shaders. Treat them as a spec until you run them.
+- **One A/B:** skills vs no skills on the same brief. Mixed result, written up in [`docs/AB_TEST.md`](docs/AB_TEST.md).
+- **CI:** the validator and unit tests for the measurement tools run on every push.
 - **Failed its own test:** silhouette IoU 0.46 against a required 0.85. Documented, not deleted.
 - **Not in this library:** dialogue, multiplayer, save systems, store-page production, writing music. Sound *wiring* is in. Composition is not.
 
@@ -325,11 +343,14 @@ ForgeSkills/
 ├── skills/                    28 skills, one folder each
 │   └── gamedev-<name>/SKILL.md   (+ references/ and assets/, loaded on demand)
 ├── tools/                     measurement, Blender, Godot ablation, this README's loop
+├── tests/                     unit tests for the measurement tools
+├── examples/ab-campfire/      the A/B scenes above
 └── docs/
     ├── README.md              index of all 28 skills
     ├── TOKEN_EFFICIENCY.md    what the skills cost in context, and what they save
     ├── USAGE.md               worked command lines
     ├── TEST_RESULTS.md        what was run, including what failed
+    ├── AB_TEST.md             skills vs no skills, same brief
     ├── LIMITATIONS.md         blind spots and unverified claims
     ├── COVERAGE.md            skill × technique matrix
     ├── transcript-sources.md  technique → source
@@ -355,9 +376,10 @@ Then:
 
 ```bash
 python tools/validate_skills.py
+pytest -q
 ```
 
-Zero errors, or it does not land.
+Zero errors and green tests, or it does not land.
 
 ---
 

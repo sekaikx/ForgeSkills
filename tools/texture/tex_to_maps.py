@@ -42,7 +42,7 @@ def blur(img, radius):
     """
     r = max(1, int(radius))
     pad = np.pad(img, r, mode="edge")
-    ii = pad.cumsum(0).cumsum(1)
+    ii = pad.astype(np.float64).cumsum(0).cumsum(1)
     ii = np.pad(ii, ((1, 0), (1, 0)), mode="constant")
     h, w = img.shape
     k = 2 * r + 1

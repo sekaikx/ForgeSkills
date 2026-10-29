@@ -4,7 +4,7 @@ description: >
   Wire a Unity 6 project so imported assets land at the right scale, orientation, and
   materials. Use for FBX or glTF import, prefabs, URP or HDRP, and build checks.
 license: Apache-2.0
-compatibility: Unity 6 (6000.x). Differences from Unity 2022 noted.
+compatibility: Unity 6 (6000.x); URP and HDRP.
 metadata:
   engine: unity
   category: gamedev-pipeline
@@ -38,7 +38,7 @@ conversion, and the conversion is where assets silently break.
 
 ```
 [ ] FBX or glTF in Assets/, with the .meta committed
-[ ] Model tab: Scale Factor 1.0, Convert Units ON, Bake Axis Conversion ON
+[ ] Model tab (Scene section in Unity 6): Scale Factor 1.0, Convert Units ON, Bake Axis Conversion ON
 [ ] Normals: Import (preserve the authored normals)
 [ ] Tangents: Calculate Mikktspace
 [ ] Materials: extract, then assign a project material (do not use embedded)
@@ -74,7 +74,7 @@ Blender's shader graph does not survive FBX. Expect to rebuild materials in Unit
 
 ```
 [ ] base color re-assigned from the sampled palette
-[ ] metallic/roughness set (URP: Lit; HDRP: Lit)
+[ ] metallic and smoothness set (Lit in URP and HDRP; smoothness = 1 - roughness)
 [ ] normal map imported as Normal Map (texture type in the importer)
 [ ] textures marked sRGB only for albedo; normal/mask maps NOT sRGB
 [ ] shared materials: one material per surface family, not per object

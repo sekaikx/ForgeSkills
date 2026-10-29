@@ -1,10 +1,11 @@
 ---
 name: gamedev-lighting
 description: >
-  Light a scene so it reads: key, fill, rim, and a shadow budget. Use when a scene is lit
-  but looks flat, when shadows cost too much, or when light must match a reference.
+  Light a scene so it reads: key, fill, rim, and a shadow budget. Use when the light rig
+  is wrong, shadows cost too much, or light must match a reference. For engine settings
+  (fog, tonemap, SSAO) use godot-visual-polish; for flat materials use texture-authoring.
 license: Apache-2.0
-compatibility: Engine-agnostic. Examples for Blender EEVEE/Cycles and Godot 4.x.
+compatibility: Engine-agnostic lighting theory; no engine-specific code.
 metadata:
   engine: any
   category: gamedev-world

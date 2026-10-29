@@ -12,7 +12,7 @@ comparison.
 
 Usage inside Blender:
     exec(open(r"...\\validate_scene.py").read())
-    report = validate(frame=(1.80, 0.75, 0.45))
+    report = validate(frame=(0.36, 0.32, 1.84))  # (half-x, half-y, height)
 
 Usage headless:
     blender -b file.blend -P validate_scene.py -- --height 1.80 --json out.json
@@ -125,9 +125,9 @@ def landmarks(height):
     }
 
 
-def validate(frame=(1.80, 0.75, 0.45), height_tol_pct=2.0, expect_height=1.80):
+def validate(frame=(0.36, 0.32, 1.84), height_tol_pct=2.0, expect_height=1.80, max_gap=0.75):
     strays = find_strays(frame)
-    isolated = find_isolated(max_gap=frame[1])
+    isolated = find_isolated(max_gap=max_gap)
     m, M = scene_bounds()
     H = (M.z - m.z) if m else 0.0
     err_pct = abs(H - expect_height) / expect_height * 100 if expect_height else 0.0

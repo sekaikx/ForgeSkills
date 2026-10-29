@@ -76,6 +76,8 @@ var integrity := 100.0
 var stage := 0
 
 func apply_damage(amount: float) -> void:
+    if integrity <= 0.0:
+        return                    # already destroyed: no re-fire
     integrity = clampf(integrity - amount, 0.0, max_integrity)
     var new_stage := _stage_for(integrity)
     if new_stage != stage:
@@ -84,6 +86,12 @@ func apply_damage(amount: float) -> void:
         stage_changed.emit(old, new_stage)
     if integrity <= 0.0:
         destroyed.emit()
+
+func _stage_for(i: float) -> int:   # 0 intact, 1 damaged, 2 critical, 3 destroyed
+    if i <= 0.0: return 3
+    if i < 34.0: return 2
+    if i < 67.0: return 1
+    return 0
 
 func debug_state() -> String:
     return "integrity=%.1f stage=%d" % [integrity, stage]

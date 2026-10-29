@@ -14,9 +14,9 @@ For each setting:
 Verdicts:
   noise     |cost| within the timing noise floor; measure longer before deciding
   CUT?      costs >= --expensive-ms but changes almost nothing   -> reduce or remove first
-  earns     visible change justifies the cost
+  earns     costs >= --cheap-ms and visibly changes the image
   cheap     costs < --cheap-ms and visibly helps
-  invisible cheap and changes nothing; delete for clarity
+  invisible costs less than --expensive-ms and changes nothing; delete for clarity
 
 Usage:
   python tools/godot/ablation_report.py --dir <ablation folder> [--budget-ms 16.6] [--strict] [--json]
@@ -45,7 +45,7 @@ def luminance(path):
 def image_change(a_path, b_path):
     a, b = luminance(a_path), luminance(b_path)
     if a.shape != b.shape:
-        raise SystemExit(f"screenshot sizes differ: {a_path} {a.shape} vs {b_path} {b.shape}")
+        raise ValueError(f"screenshot sizes differ: {a_path} {a.shape} vs {b_path} {b.shape}")
     d = np.abs(a - b)
     return float(d.mean()), float((d > PIXEL_DELTA).mean() * 100.0)
 
@@ -65,7 +65,7 @@ def analyse(folder, cheap_ms, expensive_ms):
     data = json.loads((folder / "ablation.json").read_text(encoding="utf-8"))
     views = data.get("views") or []
     if not views:
-        raise SystemExit("ablation.json has no views - nothing was measured")
+        raise ValueError("ablation.json has no views - nothing was measured")
     bases = [view_baseline(folder, v) for v in views]
     rows = []
     for name in data.get("toggles", []):
@@ -92,8 +92,10 @@ def analyse(folder, cheap_ms, expensive_ms):
             verdict = "noise"
         elif invisible and cost >= expensive_ms:
             verdict = "CUT?"
+        elif invisible:
+            verdict = "invisible"
         elif cost < cheap_ms:
-            verdict = "invisible" if invisible else "cheap"
+            verdict = "cheap"
         else:
             verdict = "earns"
         rows.append({
@@ -119,7 +121,7 @@ def main():
     ap.add_argument("--budget-ms", type=float, help="GPU frame budget for the full scene")
     ap.add_argument("--cheap-ms", type=float, default=0.1)
     ap.add_argument("--expensive-ms", type=float, default=0.3)
-    ap.add_argument("--strict", action="store_true", help="exit 1 if any setting is CUT?")
+    ap.add_argument("--strict", action="store_true", help="exit 1 if any setting is CUT? (exit 2 means unreadable input)")
     ap.add_argument("--json", action="store_true")
     a = ap.parse_args()
 
@@ -127,7 +129,12 @@ def main():
     if not (folder / "ablation.json").exists():
         print(f"no ablation.json in {folder}", file=sys.stderr)
         return 2
-    data, rows, summary = analyse(folder, a.cheap_ms, a.expensive_ms)
+    try:
+        data, rows, summary = analyse(folder, a.cheap_ms, a.expensive_ms)
+    except (ValueError, OSError, KeyError, TypeError, AttributeError) as e:
+        # JSONDecodeError is a ValueError; a missing screenshot is an OSError
+        print(f"unreadable input: {e}", file=sys.stderr)
+        return 2
 
     if a.json:
         print(json.dumps({"meta": {k: data.get(k) for k in ("godot", "renderer", "adapter", "resolution")},

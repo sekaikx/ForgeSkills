@@ -1,8 +1,9 @@
 ---
 name: gamedev-game-testing
 description: >
-  Write tests for games and 3D assets: smoke tests, state assertions, visual regression,
-  and loop tests. Use when a bug must not return, or when "it works" needs proof.
+  Write automated tests for games and 3D assets: smoke tests, state assertions, visual
+  regression, loop tests. Use when a bug must not return or behaviour needs a repeatable
+  test. For a final done-check before reporting, use verification.
 license: Apache-2.0
 compatibility: Engine-agnostic. Godot 4.x headless, Blender Python, Python + Pillow/numpy.
 metadata:
@@ -82,7 +83,8 @@ func test_damage_stages() -> void:
     assert(d.stage == 2)
     d.apply_damage(40.0)          # 0 -> destroyed
     assert(d.integrity == 0.0)
-    assert(stages.size() == 2)
+    assert(d.stage == 3)          # destroyed is its own stage
+    assert(stages.size() == 3)    # intact->damaged->critical->destroyed
 ```
 
 Test **the boundaries specifically**: exactly at a threshold, one unit below, one above.
@@ -120,10 +122,10 @@ def assert_clean(output: str) -> None:
 Compare against a stored reference with a tolerance, never exact equality.
 
 ```python
-report = compare.evaluate(ref="refs/hero_front.png", test="out/render.png",
-                          kind="character", size=(512, 512))
+report = compare.evaluate("refs/hero_front.png", "out/render.png",
+                          kind="character", bands=10, size=(512, 512))
 assert report["silhouette_iou"] >= 0.85, report["silhouette_iou"]
-assert report["band_max_err_pct"] <= 8.0, report["band_err_pct"]
+assert report["band_max_err_pct"] <= 5.0, report["band_errors_pct"]
 ```
 
 Rules that keep visual tests useful:

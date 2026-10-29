@@ -130,7 +130,8 @@ def can_place(x, y, radius_cells, slope_max=8.0):
     return not occupied[max(0,y-r):y+r+1, max(0,x-r):x+r+1].any()
 
 def stamp(x, y, radius_cells):
-    occupied[max(0,y-r):y+r+1, max(0,x-r):x+r+1] = True   # careful with r scope
+    r = radius_cells
+    occupied[max(0,y-r):y+r+1, max(0,x-r):x+r+1] = True
 ```
 
 The buffer is what prevents the classic "three houses intersecting" artifact. Reserve space

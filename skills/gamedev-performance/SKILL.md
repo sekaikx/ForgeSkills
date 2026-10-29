@@ -5,7 +5,7 @@ description: >
   detail budgeting by screen size. Use when a scene is slow, when planning budgets before
   content, or when deciding what detail is worth its cost.
 license: Apache-2.0
-compatibility: Engine-agnostic; Godot 4.x and Unity 6 profiler workflows.
+compatibility: Engine-agnostic budgeting method; no engine-specific profiler steps.
 metadata:
   engine: any
   category: gamedev-perf
