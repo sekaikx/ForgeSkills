@@ -27,17 +27,21 @@ detail, the entry cites both and keeps the stronger implementation detail.
 
 ```
 A. Orchestration & process      01-orchestration-and-verification.md   T-01..T-08
-B. Assets, kits & textures      02-assets-and-textures.md              T-09..T-20
+B. Assets, kits & textures      02a-assets-and-textures.md             T-09..T-15
+B. (cont.)                      02b-assets-and-textures.md             T-16..T-20
 C. Motion & animation           03-motion-and-vfx.md                   T-21..T-28
-D. Effects & feedback           03-motion-and-vfx.md                   T-29..T-34
+D. Effects & feedback           03b-effects-and-feedback.md             T-29..T-34
 E. World, light & camera        04-world-lighting-and-gameplay.md      T-35..T-43
-F. Gameplay systems             04-world-lighting-and-gameplay.md      T-44..T-52
+F. Gameplay systems             04b-gameplay-systems.md                T-44..T-52
 G. Performance & pipeline       05-performance-and-pipeline.md         T-53..T-58
 H. Rendering & presentation     06-rendering-and-presentation.md       T-59..T-72
 I. Direction, bosses, sound     07-direction-boss-audio.md             T-73..T-81
 ```
 
-Coverage matrix (technique → skill → status): `coverage-matrix.md`.
+Coverage matrix (technique → skill → status): [`../COVERAGE.md`](../COVERAGE.md).
+
+`COVERAGE.md` is the source of truth for which skill owns a technique. The "Skill" field in each
+entry names the skill where the technique was first written up, so the two can differ.
 
 ## What the source material is actually about
 

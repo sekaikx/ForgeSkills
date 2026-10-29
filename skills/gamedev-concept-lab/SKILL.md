@@ -2,7 +2,8 @@
 name: gamedev-concept-lab
 description: >
   Invent a few game concepts only after constraints and a market scan. Use when asked for
-  game ideas, a new pitch, or what to make next. Asks the binding questions before pitching.
+  game ideas, what to make next, or to write up a new concept. Asks the binding questions
+  first. To assess an existing idea or pitch use concept-judge.
 license: Apache-2.0
 compatibility: Engine-agnostic. Needs web search before any idea is recommended.
 metadata:

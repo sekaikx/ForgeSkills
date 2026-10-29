@@ -2,10 +2,11 @@
 name: gamedev-camera
 description: >
   Design game cameras: focal length and framing, third/first-person rigs, follow with
-  deadzone and look-ahead, collision, shake and cinematic moves. Use when the view is
-  nauseating, the subject is unreadable, or the camera fights the player.
+  deadzone and look-ahead, collision, cinematic moves, camera-side shake trauma. Use when
+  the view is nauseating or the camera fights the player. For hit-impact feedback use vfx-
+  impact.
 license: Apache-2.0
-compatibility: Engine-agnostic; Godot 4.x and Unity 6 examples.
+compatibility: Engine-agnostic camera theory and numbers; no engine-specific code.
 metadata:
   engine: any
   category: gamedev-world

@@ -2,6 +2,9 @@
 
 Everything below was executed. Nothing here is projected or assumed.
 
+The validator output in sections 1 and 7 is from a re-run on 2026-10-29 (28 skills, 81
+techniques). All other sections keep the dates of their original runs.
+
 Environment: Windows 10.0.19045, Blender 5.2.2 LTS (EEVEE), Python 3.12 (system) and 3.13
 (Blender), Pillow + numpy. No Godot or Unity installed.
 
@@ -10,11 +13,16 @@ Environment: Windows 10.0.19045, Blender 5.2.2 LTS (EEVEE), Python 3.12 (system)
 ## 1. Library validation — PASS
 
 ```
-$ python tools/validate_skills.py
-
-SKILL LIBRARY VALIDATION — 20 skills, 58 techniques known
+$ python3 tools/validate_skills.py
+========================================================================
+SKILL LIBRARY VALIDATION — 28 skills, 81 techniques known
+========================================================================
+[OK  ] gamedev-animation                 1098 words
 ...
+[OK  ] gamedev-world-from-data            932 words
+------------------------------------------------------------------------
 ERRORS 0   WARNINGS 0
+========================================================================
 ```
 
 Checks performed: YAML frontmatter parses; `name` matches directory; description length and
@@ -182,11 +190,14 @@ These are labelled as specifications in their skills, not as verified recipes. S
 The library was copied to a standalone layout (Desktop/game-design-skills/) and re-validated
 in place.
 
-`
-$ python tools/validate_skills.py
-SKILL LIBRARY VALIDATION — 20 skills, 58 techniques known
+```
+$ python3 tools/validate_skills.py
+SKILL LIBRARY VALIDATION — 28 skills, 81 techniques known
 ERRORS 0   WARNINGS 0
-`
+```
+
+(Re-run 2026-10-29 on the current library. The distribution copy itself was validated at
+20 skills and 58 techniques when it was made.)
 
 **Two validator bugs surfaced during the move**, both cases of a check silently passing
 because it found nothing to check:

@@ -1,11 +1,11 @@
 ---
 name: gamedev-vfx-impact
 description: >
-  Build hit feedback and effects that land: layered impact FX, screen shake, hitstop,
-  fracture/destruction, flipbook VFX and deployable turrets. Use when combat feels
-  weightless, effects read as noise, or impacts do not communicate.
+  Build hit feedback and effects that land: layered impact FX, hitstop, impact-triggered
+  screen shake, fracture, flipbook VFX, turrets. Use when combat feels weightless or
+  effects read as noise. For camera rig or follow-motion problems use camera.
 license: Apache-2.0
-compatibility: Engine-agnostic; timings apply to Godot 4.x, Unity 6, Unreal 5.
+compatibility: Engine-agnostic timings (unmeasured in any engine); the one code sample is GDScript.
 metadata:
   engine: any
   category: gamedev-feedback

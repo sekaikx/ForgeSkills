@@ -1,8 +1,10 @@
 ---
 name: gamedev-godot-visual-polish
 description: >
-  Make a Godot 4 3D scene read finished using engine settings only, then measure each
-  setting's frame cost. Use when a scene looks flat or default, or graphics eat the budget.
+  Make a Godot 4 3D scene read finished using engine settings only (fog, tonemap, SSAO,
+  glow), then measure each setting's frame cost. Use when a Godot scene looks default or
+  graphics eat the budget. Not for light placement (lighting) or material detail (texture-
+  authoring).
 license: Apache-2.0
 compatibility: Godot 4.3+ (AgX needs 4.4+). Forward+ for SDFGI/SSIL/SSAO/TAA; notes for Mobile and Compatibility.
 metadata:
@@ -84,7 +86,7 @@ viewpoint, screenshot. Each setting gets two numbers: cost, and visible change.
    against visible change net of noise and flags **expensive-but-invisible** settings.
 3. Reduce quality knobs before presence — table in `references/presets.md`.
 
-Measured on a real project (Godot 4.7.2, RTX 3050, 720p): sun shadows 1.06 ms, MSAA 2× 0.66
+Example values (unverified, not yet run in Godot): sun shadows 1.06 ms, MSAA 2× 0.66
 ms, depth fog within noise (0.06 ms) — the fog stays, the shadow settings are where savings live.
 
 ## Step 3 — Foundation test

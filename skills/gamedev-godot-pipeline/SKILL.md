@@ -101,10 +101,12 @@ glTF carries PBR values. Verify after import:
 ```gdscript
 for child in model.find_children("*", "MeshInstance3D", true, false):
     for i in child.mesh.get_surface_count():
-        var m := child.get_active_material(i)
+        var m := child.get_active_material(i) as BaseMaterial3D
+        if m == null:
+            print("%s[%d] <no BaseMaterial3D>" % [child.name, i])
+            continue
         print("%s[%d] %s rough=%.2f metal=%.2f" % [
-            child.name, i, m.resource_name if m else "<none>",
-            m.roughness if m else -1.0, m.metallic if m else -1.0])
+            child.name, i, m.resource_name, m.roughness, m.metallic])
 ```
 
 If roughness reads 1.0 everywhere, the map did not survive — usually a missing texture path or

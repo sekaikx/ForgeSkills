@@ -125,6 +125,8 @@ debugging (repro, bisect, instrument)  →  game-testing (permanent test)
 See [`TEST_RESULTS.md`](TEST_RESULTS.md) for what was actually executed, and
 [`LIMITATIONS.md`](LIMITATIONS.md) for what is missing, unproven, or failed.
 
+One small A/B test, with and without skills, is in [`AB_TEST.md`](AB_TEST.md).
+
 Short version: the workflow and tooling skills are exercised. The engine pipeline skills
 (Godot, Unity) are **written from documented behaviour but were not run** — no engine was
 installed in this environment, so treat their checklists as a specification to verify on first

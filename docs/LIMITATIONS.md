@@ -21,15 +21,14 @@ They are structured as checklists precisely so they can be verified on first use
 The *concepts* (verify scale in-scene, keep gameplay components off the visual root, parse
 stderr because exit 0 lies) are robust. The *keystrokes* are not verified.
 
-**Update (Godot 4.7.2 available later):** the Godot rendering material added afterwards was
-partly executed on a real game (a finished Godot 4.7 project, RTX 3050, 1280×720):
+**Godot and Unity content is written but not executed.** No Godot or Unity installation was
+available (see `TEST_RESULTS.md`). The Godot rendering material, both foliage shaders in
+`skills/gamedev-foliage/assets/`, `tools/godot/ablation_capture.gd` with `ablation_report.py`,
+and the whole Unity skill come from documentation and the S13 transcript. No measurement from
+a running engine backs them. Treat them as specifications to verify on first use.
 
-- `tools/godot/ablation_capture.gd` + `ablation_report.py` ran end to end (section 12).
-- Both foliage shaders in `skills/gamedev-foliage/assets/` compile and render with no errors.
-- Everything else in `gamedev-godot-visual-polish`, `gamedev-visual-artifacts` and
-  `gamedev-foliage` is from the Godot 4.x documentation and the S13 transcript. Version notes
-  (AgX in 4.4+, its controls in 4.5+, SMAA in 4.5+) were not individually checked against
-  each release.
+Version notes in `gamedev-godot-visual-polish` (AgX in 4.4+, its controls in 4.5+, SMAA in
+4.5+) were not individually checked against each release.
 
 ---
 
@@ -134,8 +133,8 @@ is a guess.
 - **Boss and audio skills were not executed in an engine.** They are procedures from the
   transcripts plus gates. Treat the checklists as unproven until a fight and a mute test
   have been run.
-- **No project templates.** The `docs/gamedev/templates/` directory is empty. Every skill
-  describes structure rather than shipping a starter project.
+- **No project templates.** The library ships no starter project. Every skill describes
+  structure instead.
 - **The tooling is Python + Blender, plus one Godot tool** (`tools/godot/ablation_capture.gd`).
   No Unity automation exists.
 
@@ -163,7 +162,7 @@ These are deliberate tensions, and applying both literally will confuse you:
 | `compare.py` | Only handles one subject per image | Pre-crop sheets with `measure_sheet.py` |
 | `validate_scene.py` | Envelope is passed manually; wrong envelope = false pass | Derive the envelope from the measured proportions |
 | `explorer_build.py` | Tuned for one specific reference, not a general character generator | Treat as an example, not a library |
-| `render_compare_views.py` | Camera framing is height-based; wide props need manual framing | Set `lens_mm` and `margin` explicitly |
+| `render_compare_views.py` | Camera framing comes from scene bounds; very wide props may need manual framing | Set `lens_mm` and `margin` explicitly |
 
 ---
 

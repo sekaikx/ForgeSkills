@@ -276,12 +276,17 @@ def report(H):
 
 if __name__ == "__main__":
     H = 1.80
+    out = None
     import sys
     argv = sys.argv
     if "--" in argv:
         for i, a in enumerate(argv):
             if a == "--height":
                 H = float(argv[i + 1])
+            elif a == "--out":
+                out = argv[i + 1]
     purge_scene()
     build(H)
     report(H)
+    if out:
+        bpy.ops.wm.save_as_mainfile(filepath=out)

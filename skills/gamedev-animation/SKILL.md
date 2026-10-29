@@ -52,7 +52,7 @@ def build_armature(name, joints):
     """joints: ordered list of (bone_name, head_xyz, tail_xyz, parent_name)."""
     arm = bpy.data.armatures.new(name)
     ob = bpy.data.objects.new(name, arm)
-    col.objects.link(ob)
+    bpy.context.collection.objects.link(ob)
     bpy.context.view_layer.objects.active = ob
     bpy.ops.object.mode_set(mode='EDIT')
     created = {}
@@ -110,8 +110,8 @@ The difference between amateur and professional is timing and spacing, not pose 
 
 Sliding feet ruin an otherwise good locomotion set. Two defences:
 
-1. **Match stride to speed.** Stride length `S` metres per cycle, cycle time `T` seconds,
-   so `speed = 2S / T` for a two-step cycle. If the character moves at 4.0 m/s, the stride
+1. **Match stride to speed.** Step length `S` metres (one foot-plant to the other), cycle time `T`
+   seconds for two steps, so `speed = 2S / T`. If the character moves at 4.0 m/s, the stride
    and cycle must satisfy that equation. Any mismatch is visible sliding.
 2. **Author in place, drive speed from the clip** (root motion) or **scale playback rate** to
    the actual speed. Never let the animation and the movement code disagree.

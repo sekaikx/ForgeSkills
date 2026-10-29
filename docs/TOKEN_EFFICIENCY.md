@@ -22,9 +22,12 @@ The table below is chars/4 from that script.
 
 | | 24 skills, before this trim | 28 skills, after |
 |---|---:|---:|
-| Always loaded (all descriptions) | 1,530 | 1,564 |
+| Always loaded (all descriptions) | 1,530 | 1,714 |
 | Largest skill body | 2,063 | 2,063 |
-| Typical task (descriptions + 2 median bodies) | — | 4,552 |
+| Typical task (descriptions + 2 median bodies) | — | 4,716 |
+
+The 28-skill column was 1,564 / 4,552 before the routing rewrite. Descriptions that name the
+neighbouring skill to use instead cost about 150 more tokens; that is the price of fewer misroutes.
 
 Both columns are chars/4, measured with `token_budget.py` in the same way. Four new
 descriptions cost about 216 tokens. Cutting the longest old descriptions paid for almost
@@ -39,12 +42,12 @@ They are retired. Do not add them to this table.
 
 A skill's body costs ~1,500 tokens once. The things it prevents cost far more:
 
-- **Re-running the engine.** One Godot scene load in the benchmark project takes 60–90 s and
-  produces thousands of log lines. A skill that says "one launch for all viewpoints, grep the
+- **Re-running the engine.** A Godot scene load can take a minute or more and
+  produce thousands of log lines (not measured here). A skill that says "one launch for all viewpoints, grep the
   log" removes whole iterations.
 - **Writing measurement tools from scratch.** Without `tools/godot/ablation_capture.gd` an
-  agent writes its own frame-time harness — a few hundred lines it then debugs (this library's
-  own first version measured nonsense until fixed; see `LIMITATIONS.md` §12).
+  agent writes its own frame-time harness — a few hundred lines it then debugs (the tool has not been run
+  against an engine; see `LIMITATIONS.md`).
 - **Wrong-direction iterations.** The visual-polish pass is ordered by impact; an agent that
   tunes fog before fixing the sun direction redoes the fog later.
 - **False success, then rework.** Verification gates catch a broken result before it is
@@ -62,5 +65,6 @@ Stated once in `gamedev-orchestrator` ("Working cheaply") and applied everywhere
 
 ## Benchmark evidence
 
-See `docs/BENCHMARK_WOODS.md` for the agent-effort comparison on a real Godot game (tool
-calls, file reads, engine launches and wall time, with and without the skills).
+No agent-effort benchmark with and without the skills has been run on a real game. The
+savings described above are reasoned from mechanisms, not measured. One small A/B
+test is written up in [`AB_TEST.md`](AB_TEST.md).

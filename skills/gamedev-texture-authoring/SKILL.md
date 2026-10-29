@@ -2,8 +2,9 @@
 name: gamedev-texture-authoring
 description: >
   Author game textures: derive roughness/normal/AO from albedo, make seamless tiles, set
-  texel density, pack atlases, and bake procedural detail into texture space. Use when
-  surfacing models, fixing tiling seams, or when materials look flat and plastic.
+  texel density, pack atlases, bake procedural detail. Use when surfacing models, fixing
+  tiling seams, or when materials look flat and plastic. Not for scene lighting (lighting)
+  or engine settings.
 license: Apache-2.0
 compatibility: Blender 4.2+/5.x for baking. Python tooling in tools/texture/ (Pillow + numpy).
 metadata:
@@ -93,7 +94,7 @@ col0, colN = arr[:, 0], arr[:, -1]
 seam_step = np.abs(col0.astype(float) - colN.astype(float)).mean()
 interior_step = np.abs(arr[:, 1:-1].astype(float) - arr[:, :-2].astype(float)).mean()
 ratio = seam_step / max(1e-6, interior_step)
-# ratio near 1.0 = seamless; > 1.5 = visible seam
+# ratio near 1.0 = seamless; > 1.6 = visible seam
 ```
 
 Fixes, in order of preference:

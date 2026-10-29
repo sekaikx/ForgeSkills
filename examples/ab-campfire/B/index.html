@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Campfire Camp at Dusk</title>
+<style>
+  html,body{margin:0;height:100%;overflow:hidden;background:#bf8c73}
+  canvas{display:block}
+</style>
+<script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js"}}</script>
+</head>
+<body>
+<script type="module">
+import * as THREE from 'three';
+
+// Art bible: one warm accent (fire) only; everything else muted greens/greys/browns.
+// Roughness >= 0.8 everywhere (no gloss); flat-shaded low poly; no outlines.
+// Light preset "dusk": warm peach key, cool fill, cool rim, low hemi, fog rose-grey.
+const PAL = {
+  ground:'#4f5439', clearing:'#5f5a3f', trunk:'#4a3a2e',
+  leafA:'#2f4a3d', leafB:'#3d5a48', rock:'#6e6b66', rockDark:'#58565a',
+  canvas:'#9a8a70', log:'#3b2a20', flame:'#ff7a2a', flameCore:'#ffd27a', fog:'#bf8c73'
+};
+
+const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 2 ** -0.4; // dusk preset key_ev
+document.body.appendChild(renderer.domElement);
+
+// One fog colour, shared with the background so the horizon is seamless.
+const scene = new THREE.Scene();
+const fogCol = new THREE.Color(PAL.fog);
+scene.background = fogCol;
+scene.fog = new THREE.Fog(fogCol, 10, 34);
+
+const camera = new THREE.PerspectiveCamera(38, window.innerWidth / window.innerHeight, 0.1, 100);
+camera.position.set(0, 3.4, 10);
+camera.lookAt(0, 1.0, 0);
+
+// Three-light rig: key 4:1 over fill, rim behind and cooler. Only the key casts shadows.
+const key = new THREE.DirectionalLight('#ffc9a0', 3.0);
+key.position.set(-4, 6, 6);            // ~34 deg off camera axis, above
+key.castShadow = true;
+key.shadow.mapSize.set(1024, 1024);
+Object.assign(key.shadow.camera, { left: -9, right: 9, top: 9, bottom: -9, near: 1, far: 30 });
+key.shadow.bias = -0.0008;
+key.shadow.normalBias = 0.02;
+scene.add(key);
+
+const fill = new THREE.DirectionalLight('#7f96c0', 0.75);  // 1/4 of key, opposite side
+fill.position.set(5, 3, 4);
+scene.add(fill);
+
+const rim = new THREE.DirectionalLight('#9fb8e0', 1.2);    // behind, above, cooler
+rim.position.set(2, 6, -7);
+scene.add(rim);
+
+scene.add(new THREE.HemisphereLight('#6b7fa3', '#2e2620', 0.4)); // low sky/ground bounce
+
+// Campfire is the single interactable accent: warm point light, short range.
+const fireLight = new THREE.PointLight('#ff8a3a', 6, 9, 2);
+fireLight.position.set(0, 0.9, 0.4);
+scene.add(fireLight);
+
+const std = (color, rough = 0.85) =>
+  new THREE.MeshStandardMaterial({ color, roughness: rough, metalness: 0, flatShading: true });
+const add = (mesh, cast = false) => { mesh.castShadow = cast; mesh.receiveShadow = true; scene.add(mesh); return mesh; };
+
+// Ground: octagonal low-poly field plus a lighter trampled clearing.
+const ground = new THREE.Mesh(new THREE.CircleGeometry(30, 8), std(PAL.ground));
+ground.rotation.x = -Math.PI / 2;
+add(ground);
+const clearing = new THREE.Mesh(new THREE.CircleGeometry(4, 7), std(PAL.clearing));
+clearing.rotation.x = -Math.PI / 2;
+clearing.position.y = 0.01;
+add(clearing);
+
+// Tent: four-sided pyramid, rotated so one face points at the camera.
+const tent = new THREE.Mesh(new THREE.CylinderGeometry(0, 1.9, 1.5, 4), std(PAL.canvas, 0.9));
+tent.position.set(-3.2, 0.75, -1.2);
+tent.rotation.y = Math.PI / 4;
+add(tent, true);
+
+// Campfire: log cross and stone ring, flame cones as emissive accent.
+const logs = [[0.25, 0.09, 0.3, 0.2], [-0.25, 0.09, 0.45, -0.2], [0, 0.2, 0.2, 1.57]];
+logs.forEach(([x, y, z, r]) => {
+  const log = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.07, 1.0, 5), std(PAL.log));
+  log.rotation.set(0, 0, Math.PI / 2 + r * 0.15);
+  log.rotation.y = r;
+  log.position.set(x, y, z);
+  add(log);
+});
+for (let i = 0; i < 6; i++) {
+  const a = (i / 6) * Math.PI * 2;
+  const stone = new THREE.Mesh(new THREE.IcosahedronGeometry(0.16, 0), std(PAL.rockDark));
+  stone.scale.set(1, 0.6, 1);
+  stone.position.set(Math.cos(a) * 0.7, 0.05, 0.4 + Math.sin(a) * 0.7);
+  add(stone);
+}
+const flame = new THREE.Mesh(new THREE.ConeGeometry(0.28, 0.8, 5),
+  new THREE.MeshBasicMaterial({ color: PAL.flame }));
+flame.position.set(0, 0.6, 0.4);
+scene.add(flame);
+const core = new THREE.Mesh(new THREE.ConeGeometry(0.14, 0.45, 5),
+  new THREE.MeshBasicMaterial({ color: PAL.flameCore }));
+core.position.set(0, 0.5, 0.4);
+scene.add(core);
+
+// Trees: two stacked cones on a trunk; each casts shadow from the key.
+function tree(x, z, s, leaf) {
+  const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.12 * s, 0.18 * s, 1.1 * s, 5), std(PAL.trunk));
+  trunk.position.set(x, 0.55 * s, z);
+  add(trunk, true);
+  const low = new THREE.Mesh(new THREE.ConeGeometry(0.95 * s, 2.0 * s, 6), std(leaf));
+  low.position.set(x, 2.1 * s, z);
+  add(low, true);
+  const top = new THREE.Mesh(new THREE.ConeGeometry(0.7 * s, 1.5 * s, 6), std(leaf));
+  top.position.set(x, 2.9 * s, z);
+  add(top, true);
+}
+tree(-4.8, -3.2, 1.3, PAL.leafA);
+tree(4.6, -4.2, 1.1, PAL.leafB);
+tree(5.4, 0.6, 0.9, PAL.leafA);
+
+// Rocks: squashed icosahedrons sitting on the ground.
+const rocks = [[2.1, 1.8, 1.1, 0.7, 0.9, PAL.rock], [-1.4, 2.2, 0.7, 0.5, 0.6, PAL.rockDark]];
+rocks.forEach(([x, z, sx, sy, sz, c]) => {
+  const r = new THREE.Mesh(new THREE.IcosahedronGeometry(0.7, 0), std(c, 0.9));
+  r.scale.set(sx, sy, sz);
+  r.position.set(x, sy * 0.35, z);
+  add(r, true);
+});
+
+renderer.render(scene, camera);
+
+window.addEventListener('resize', () => {
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.render(scene, camera);
+});
+</script>
+</body>
+</html>

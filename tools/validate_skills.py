@@ -132,6 +132,42 @@ def collect_tech_ids(docs_root):
     return ids
 
 
+def check_coverage(path):
+    """Warnings when the COVERAGE.md summary table disagrees with its matrices.
+
+    Skill column names differ between matrices, so this compares totals: the summary's
+    core and referenced columns must add up to the dots in the technique rows, and
+    each row's covered count must equal core + referenced.
+    """
+    path = Path(path)
+    if not path.exists():
+        return []
+    text = path.read_text(encoding="utf-8")
+    if "## Coverage summary" not in text:
+        return []
+    head, tail = text.split("## Coverage summary", 1)
+    summary, _, after = tail.partition("\n## ")
+    core = ref = sum_core = sum_ref = 0
+    warns = []
+    for line in (head + after).splitlines():
+        if line.startswith("| T-"):
+            core += line.count("●")
+            ref += line.count("○")
+    for line in summary.splitlines():
+        m = re.match(r"\|\s*([\w-]+)\s*\|\s*(\d+)\s*\|\s*(\d+)\s*\|\s*(\d+)\s*\|", line)
+        if not m:
+            continue
+        c, r, n = (int(g) for g in m.groups()[1:])
+        sum_core += c
+        sum_ref += r
+        if c + r != n:
+            warns.append(f"COVERAGE.md row '{m.group(1)}': {c} + {r} != {n} covered")
+    if (core, ref) != (sum_core, sum_ref):
+        warns.append(f"COVERAGE.md summary totals {sum_core} core / {sum_ref} referenced "
+                     f"but matrices hold {core} / {ref}")
+    return warns
+
+
 def validate(root=".", docs="docs/gamedev"):
     root = Path(root)
     skills = find_skills(root)
@@ -213,6 +249,8 @@ def validate(root=".", docs="docs/gamedev"):
 
     errors = sum(1 for r in results for s, _ in r["issues"] if s == "error")
     warns = sum(1 for r in results for s, _ in r["issues"] if s == "warn")
+    coverage_warnings = check_coverage(root / "docs" / "COVERAGE.md")
+    warns += len(coverage_warnings)
 
     # An empty scan is a failure, not a pass. A validator that reports "0 errors"
     # after finding nothing is worse than no validator at all.
@@ -232,6 +270,7 @@ def validate(root=".", docs="docs/gamedev"):
         "warnings": warns,
         "techniques_known": len(tech_ids),
         "fatal": fatal,
+        "coverage_warnings": coverage_warnings,
         "results": results,
     }
 
@@ -251,6 +290,8 @@ def print_report(rep):
         for sev, msg in r["issues"]:
             mark = "  ERR " if sev == "error" else "  warn"
             print(f"        {mark} {msg}")
+    for msg in rep.get("coverage_warnings", []):
+        print(f"  warn {msg}")
     print("-" * 72)
     print(f"ERRORS {rep['errors']}   WARNINGS {rep['warnings']}")
     print("=" * 72)

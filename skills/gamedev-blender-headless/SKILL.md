@@ -35,7 +35,7 @@ output, not as hand-crafted state.
 **Headless** — deterministic, CI-able, no UI state involved:
 
 ```
-blender.exe -b -P build.py -- --height 1.80 --out out/asset.blend
+blender.exe -b -P tools/blender/character_blockout.py -- --height 1.80 --out out/explorer_blockout.blend
 ```
 
 `-b` runs without UI. Everything after `--` is yours; parse it from `sys.argv`.

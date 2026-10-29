@@ -112,40 +112,41 @@ to transcripts in [`transcript-sources.md`](transcript-sources.md).
 
 | Skill | ● core | ○ referenced | Techniques covered |
 |---|:--:|:--:|:--:|
-| orchestrator | 4 | 4 | 8 |
+| orchestrator | 5 | 3 | 8 |
 | verification | 2 | 3 | 5 |
-| visual-iteration | 2 | 4 | 6 |
-| debugging | 2 | 1 | 3 |
-| game-testing | 2 | 2 | 4 |
-| reference-reconstruction | 5 | 3 | 8 |
-| blender-headless | 4 | 4 | 8 |
-| procedural-modeling | 3 | 3 | 6 |
-| modular-kit | 4 | 3 | 7 |
-| texture-authoring | 4 | 1 | 5 |
-| animation | 4 | 3 | 7 |
-| locomotion | 2 | 3 | 5 |
-| vfx-impact | 5 | 2 | 7 |
-| lighting | 4 | 3 | 7 |
-| camera | 1 | 4 | 5 |
+| visual-iteration | 2 | 2 | 4 |
+| debugging | 2 | 0 | 2 |
+| game-testing | 2 | 0 | 2 |
+| reference-reconstruction | 4 | 4 | 8 |
+| blender-headless | 5 | 3 | 8 |
+| procedural-modeling | 2 | 2 | 4 |
+| modular-kit | 4 | 5 | 9 |
+| texture-authoring | 5 | 2 | 7 |
+| animation | 5 | 3 | 8 |
+| locomotion | 3 | 2 | 5 |
+| vfx-impact | 6 | 1 | 7 |
+| lighting | 5 | 4 | 9 |
+| camera | 2 | 1 | 3 |
 | world-from-data | 4 | 1 | 5 |
-| gameplay-systems | 8 | 2 | 10 |
-| performance | 5 | 3 | 8 |
-| godot-pipeline | 0 | 3 | 3 |
-| unity-pipeline | 0 | 3 | 3 |
+| gameplay-systems | 9 | 1 | 10 |
+| performance | 5 | 7 | 12 |
+| godot-pipeline | 0 | 1 | 1 |
+| unity-pipeline | 0 | 1 | 1 |
 | godot-visual-polish | 9 | 2 | 11 |
 | foliage | 3 | 0 | 3 |
 | visual-artifacts | 1 | 2 | 3 |
 | art-direction | 1 | 2 | 3 |
-| concept-judge | 1 | 0 | 1 |
+| concept-judge | 1 | 1 | 2 |
 | concept-lab | 1 | 1 | 2 |
 | boss-encounter | 3 | 0 | 3 |
 | audio-wire | 1 | 0 | 1 |
 
-Every technique from T-01 through T-72 is covered as core by at least one skill, and so are
-T-73 through T-81 (group 7). Group 1's T-08 (pose
-reference fixing) is referenced only, which is deliberate — it is a working habit rather than
-a procedure, and its one rule (fix the pose before judging the model) is stated inline in
-`visual-iteration`.
+Every technique from T-01 through T-72 is covered as core by at least one skill except two:
+T-08 (pose reference fixing) and T-13 (three-way pipeline comparison). Both are referenced
+only, which is deliberate. T-08 is a working habit rather than a procedure, and its one rule
+(fix the pose before judging the model) is stated inline in `visual-iteration`. T-13 is a
+comparison method used while choosing a pipeline, not a step a skill performs. T-73 through
+T-81 (group 7) are all covered as core.
 
 ## Group 7 — Direction, bosses, sound (T-73 – T-81)
 

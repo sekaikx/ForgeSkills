@@ -26,10 +26,27 @@ from PIL import Image
 
 # ---------------------------------------------------------------- image loading
 
+def _fit_size(w, h, size):
+    """Isotropic scale of (w, h) so the whole image fits inside size."""
+    scale = min(size[0] / max(1, w), size[1] / max(1, h))
+    return max(1, int(round(w * scale))), max(1, int(round(h * scale)))
+
+
+def letterbox(im, size):
+    """Resize a PIL image into size with aspect intact, centered on black padding.
+
+    Colour and mask must share this transform or their pixels stop lining up.
+    """
+    nw, nh = _fit_size(im.width, im.height, size)
+    canvas = Image.new(im.mode, size, 0)
+    canvas.paste(im.resize((nw, nh), Image.LANCZOS), ((size[0] - nw) // 2, (size[1] - nh) // 2))
+    return canvas
+
+
 def load_rgb(path, size=None):
     im = Image.open(path).convert("RGB")
     if size is not None:
-        im = im.resize(size, Image.LANCZOS)
+        im = letterbox(im, size)
     return np.asarray(im, dtype=np.float32) / 255.0
 
 
@@ -73,7 +90,7 @@ def background_fit_mask(rgb, tol=0.055, border_frac=0.05, min_area_frac=0.004):
         for dx in (0, 1, 2):
             acc += pad[dy:dy + h, dx:dx + w]
     mask = acc >= 5
-    return largest_components(mask, min_area_frac)
+    return significant_components(mask, min_area_frac)
 
 
 def flood_background_mask(rgb, step_tol=0.030, drift_tol=0.10, min_area_frac=0.002):
@@ -123,7 +140,7 @@ def flood_background_mask(rgb, step_tol=0.030, drift_tol=0.10, min_area_frac=0.0
 
     mask = ~bg
     # drop specks of grain that survived away from the subject mass
-    return largest_components(mask, min_area_frac)
+    return significant_components(mask, min_area_frac)
 
 
 def subject_mask(rgb, bg_tol=0.055, border_frac=0.02, min_area_frac=0.004, alpha=None,
@@ -135,17 +152,18 @@ def subject_mask(rgb, bg_tol=0.055, border_frac=0.02, min_area_frac=0.004, alpha
     gradients that defeat a colour threshold.
     """
     if alpha is not None:
-        return largest_components(alpha > 0.5, min_area_frac)
+        return significant_components(alpha > 0.5, min_area_frac)
     if method == "fit":
         return background_fit_mask(rgb, tol=bg_tol, min_area_frac=min_area_frac)
     return flood_background_mask(rgb, min_area_frac=min_area_frac)
 
 
-def largest_components(mask, min_area_frac=0.004):
-    """Keep connected components above a size threshold. Pure numpy, no scipy."""
+def significant_components(mask, min_area_frac=0.004):
+    """Keep every connected component above a size threshold (not just the largest).
+
+    Pure numpy, no scipy.
+    """
     h, w = mask.shape
-    lab = np.zeros((h, w), dtype=np.int32)
-    cur = 0
     out = np.zeros_like(mask, dtype=bool)
     min_area = max(16, int(mask.sum() * min_area_frac))
     ys, xs = np.where(mask)
@@ -153,7 +171,6 @@ def largest_components(mask, min_area_frac=0.004):
     for sy, sx in zip(ys, xs):
         if visited[sy, sx]:
             continue
-        cur += 1
         stack = [(sy, sx)]
         visited[sy, sx] = True
         comp = []
@@ -168,16 +185,16 @@ def largest_components(mask, min_area_frac=0.004):
         if len(comp) >= min_area:
             for y, x in comp:
                 out[y, x] = True
-            lab_arr = comp
     return out
 
 
 def normalize_mask(mask, size=(512, 512)):
-    """Crop to the tight subject box, then scale by HEIGHT and center horizontally.
+    """Crop to the tight subject box, then scale to fit and center.
 
     Resizing straight to a square stretches aspect ratio, which destroys the
     meaning of the width profile: a tall thin figure would report near-full width
-    at every band. Scale isotropically on height so band widths stay physical.
+    at every band. Scale isotropically so the larger dimension fits and band widths
+    stay physical.
     """
     box = tight_crop(mask)
     if box is None:
@@ -186,13 +203,13 @@ def normalize_mask(mask, size=(512, 512)):
     sub = mask[y0:y1, x0:x1]
     h, w = sub.shape
     target_h, target_w = size[1], size[0]
-    scale = target_h / max(1, h)
-    new_w = max(1, min(target_w, int(round(w * scale))))
-    im = Image.fromarray((sub * 255).astype(np.uint8)).resize((new_w, target_h), Image.LANCZOS)
+    new_w, new_h = _fit_size(w, h, size)
+    im = Image.fromarray((sub * 255).astype(np.uint8)).resize((new_w, new_h), Image.LANCZOS)
     arr = np.asarray(im) > 127
     out = np.zeros((target_h, target_w), dtype=bool)
     left = (target_w - new_w) // 2
-    out[:, left:left + new_w] = arr
+    top = (target_h - new_h) // 2
+    out[top:top + new_h, left:left + new_w] = arr
     return out
 
 
@@ -400,8 +417,8 @@ def mask_at_native(path, size, alpha=None):
     Two bugs get avoided here. First, resizing before segmenting blurs a flat
     backdrop into a gradient and floods the mask. Second, resizing the mask straight
     onto a square canvas stretches aspect ratio, so a tall figure reports a wide
-    silhouette and the aspect check fails on arithmetic alone. Scale by height and
-    pad horizontally.
+    silhouette and the aspect check fails on arithmetic alone. Letterbox with the
+    same transform load_rgb uses so colour and mask stay aligned.
     """
     im0 = Image.open(path)
     w0, h0 = im0.size
@@ -418,14 +435,8 @@ def mask_at_native(path, size, alpha=None):
 
     m0 = subject_mask(rgb0, alpha=a0)
 
-    th, tw = size[1], size[0]
-    scale = th / max(1, h0)
-    nw = max(1, min(tw, int(round(w0 * scale))))
-    cm = np.asarray(Image.fromarray((m0 * 255).astype(np.uint8)).resize((nw, th), Image.LANCZOS))
-    out = np.zeros((th, tw), dtype=bool)
-    left = (tw - nw) // 2
-    out[:, left:left + nw] = cm > 127
-    return out
+    cm = np.asarray(letterbox(Image.fromarray((m0 * 255).astype(np.uint8)), size))
+    return cm > 127
 
 
 def evaluate(ref_path, test_path, kind="character", bands=10, size=(512, 512),

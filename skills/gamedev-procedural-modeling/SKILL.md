@@ -120,10 +120,13 @@ widths and the silhouette follows.
 
 Two coat profiles against a reference, same everything else:
 
-| Profile | Chest width | Hem width | Band error |
-|---|---|---|---|
-| fitted vest, no flare | 0.32 m | 0.28 m | 30-47% at bands 7-9 |
-| measured long coat | 0.46 m | 0.44 m | 1-3% at bands 3-6 |
+| Profile | Band error |
+|---|---|
+| fitted vest, no flare | lower bands 7-9 narrow by 24-45% |
+| measured long coat, hem 1.08x hip width | bands 7-9 still 24-45% narrow; bands 3-6 overshoot (1.00 vs 0.77-0.97) |
+
+Measured on one reference (docs/TEST_RESULTS.md): fixing one region can overshoot another,
+so re-measure every band after each change.
 
 The band profile names the defect for you: bands 7-9 too narrow means *the lower garment is
 missing or too tight*, not "the model looks off".
@@ -134,7 +137,8 @@ missing or too tight*, not "the model looks off".
 - **Match ring counts** when joining two lofts, or accept a visible seam and hide it under a
   belt/strap (that is what real garments do).
 - **Smooth shading with an angle limit** (30-45°) so hard edges stay hard:
-  mark `use_smooth` per polygon and let auto-smooth handle the rest.
+  mark `use_smooth` per polygon, then apply a Smooth by Angle modifier (Blender 4.1+, or
+  `bpy.ops.object.shade_auto_smooth`) — `Mesh.use_auto_smooth` no longer exists.
 - **No zero-area faces.** Taper to a small radius, never to exactly 0.
 - Keep the object origin meaningful — at the pivot you would animate or place.
 

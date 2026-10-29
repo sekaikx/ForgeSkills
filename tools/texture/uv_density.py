@@ -1,8 +1,8 @@
 """
 Measure texel density across the parts of a mesh.
 
-Density is UV area divided by surface area: how many texture pixels a square metre
-of geometry receives. Comparing that number between parts of a kit tells you which
+Density is linear: texture pixels per metre of geometry, i.e. texel * sqrt(UV area /
+surface area). Comparing that number between parts of a kit tells you which
 parts will be blurry and which are wasting atlas space. Bounding-box area is the
 wrong denominator (it flatters long thin walls), so real triangle area is used.
 
@@ -115,8 +115,9 @@ def report(path, texel=512, max_ratio=1.6, min_density=None):
         st = group_stats(verts, uvs, tris)
         if st["area_3d"] <= 1e-12:
             continue
-        # density: UV area (fraction of the 0..1 square) times texel^2, per m^2
-        density = (st["area_uv"] * texel * texel) / st["area_3d"]
+        # linear density: UV area is a fraction of the 0..1 square, so the pixel area is
+        # uv*texel^2 and the pixels per metre is its square root over the 3D area
+        density = texel * math.sqrt(st["area_uv"] / st["area_3d"])
         rows.append({
             "group": name,
             "triangles": st["triangles"],

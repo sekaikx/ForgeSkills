@@ -29,6 +29,9 @@ import numpy as np
 from PIL import Image
 
 
+FLAT_EPS = 1e-4  # luminance step (0-1) treated as no step at all
+
+
 def load_gray(path):
     im = Image.open(path).convert("RGB")
     arr = np.asarray(im, dtype=np.float32) / 255.0
@@ -78,7 +81,10 @@ def assess(path, step_ratio_threshold=1.6, percentile_threshold=99.0):
         checks[f"{axis}_step_ratio"] = {
             "value": ratio,
             "threshold": step_ratio_threshold,
-            "pass": bool(ratio is not None and ratio <= step_ratio_threshold),
+            # a flat interior has no typical step to compare against: the seam passes
+            # only if it is flat too
+            "pass": bool(s["seam_step"] <= FLAT_EPS if ratio is None
+                         else ratio <= step_ratio_threshold),
         }
         checks[f"{axis}_percentile"] = {
             "value": s["percentile"],

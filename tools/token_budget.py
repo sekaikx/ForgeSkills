@@ -21,6 +21,8 @@ import re
 import sys
 from pathlib import Path
 
+from validate_skills import BODY_TOKEN_CAP, DESC_TOKEN_CAP
+
 try:
     import tiktoken
     _ENC = tiktoken.get_encoding("cl100k_base")
@@ -61,8 +63,8 @@ def split_skill(text):
 def main():
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--root", default=".")
-    ap.add_argument("--desc-cap", type=int, default=110)
-    ap.add_argument("--body-cap", type=int, default=2100)
+    ap.add_argument("--desc-cap", type=int, default=DESC_TOKEN_CAP)
+    ap.add_argument("--body-cap", type=int, default=BODY_TOKEN_CAP)
     ap.add_argument("--json", action="store_true")
     ap.add_argument("--strict", action="store_true")
     a = ap.parse_args()

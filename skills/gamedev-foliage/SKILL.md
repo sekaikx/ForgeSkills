@@ -41,7 +41,7 @@ not triangle count.
 | `assets/leaf_canopy.gdshader` | Leaf cards: radial normals + wind; uniforms `canopy_center`, `canopy_radii`, `radial_blend`, `wind_noise`, `wind_strength` |
 | `assets/grass_wind.gdshader` | Ground cover: root→tip colour, tip² bend, normals bent up |
 
-Both compile and render in Godot 4.7.2. Copy the file into the project and assign a noise
+Not yet run in Godot; compile and render are unverified. Copy the file into the project and assign a noise
 texture; read the shader source only when changing behaviour.
 
 ## Step 1 — Canopy normals (leaf cards)

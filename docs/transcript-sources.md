@@ -24,7 +24,7 @@ citation resolving to a real passage.
 
 ## Source map
 
-| ID | Original filename (in `C:\Users\Malgus\Downloads`) | Lines | Primary subject |
+| ID | Original filename (local downloads folder, not committed) | Lines | Primary subject |
 |----|---------------------------------------------------|-------|-----------------|
 | S01 | `[English (auto-generated)] AI Built This Space Game From Scratch — Here's Exactly How [DownSub.com].txt` | 412 | Multi-model orchestration, Blender headless via Python, procedural astronaut rig, lighting presets, FPS debugging, procedural spider gait, modular wall kit |
 | S02 | `[English (auto-generated)] Building a Game for Steam with AI - Tree Chopping & Inventory [DownSub.com].txt` | 227 | Weapon hand slot, reference-driven pose fixing, Mixamo retarget, tree damage state machine, inventory design→implementation split |

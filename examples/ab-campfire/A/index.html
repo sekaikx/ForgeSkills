@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Campfire Camp at Dusk</title>
+<style>
+  html, body { margin: 0; height: 100%; overflow: hidden; background: #1d2146; }
+  canvas { display: block; width: 100vw; height: 100vh; }
+</style>
+<script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js"}}</script>
+</head>
+<body>
+<script type="module">
+import * as THREE from 'three';
+
+const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+document.body.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+scene.fog = new THREE.Fog(0x5a4a68, 16, 34);
+
+const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
+camera.position.set(0, 3.4, 9.5);
+camera.lookAt(0, 1.0, 0);
+
+// Dusk sky dome: orange horizon fading to deep indigo overhead
+const skyGeo = new THREE.SphereGeometry(60, 16, 8);
+const skyCols = [];
+const top = new THREE.Color(0x1d2146), horizon = new THREE.Color(0xf08a4b);
+const sp = skyGeo.attributes.position;
+for (let i = 0; i < sp.count; i++) {
+  const t = THREE.MathUtils.clamp(sp.getY(i) / 60, 0, 1);
+  const c = horizon.clone().lerp(top, Math.pow(t, 0.5));
+  skyCols.push(c.r, c.g, c.b);
+}
+skyGeo.setAttribute('color', new THREE.Float32BufferAttribute(skyCols, 3));
+scene.add(new THREE.Mesh(skyGeo, new THREE.MeshBasicMaterial({ vertexColors: true, side: THREE.BackSide, fog: false })));
+
+// Lights: cool dusk ambient, pale moon, warm fire glow
+scene.add(new THREE.HemisphereLight(0x8fa0d8, 0x2a2018, 0.9));
+const moon = new THREE.DirectionalLight(0xaec4ff, 0.7);
+moon.position.set(-6, 10, -4);
+moon.castShadow = true;
+moon.shadow.mapSize.set(1024, 1024);
+Object.assign(moon.shadow.camera, { left: -9, right: 9, top: 9, bottom: -9, far: 40 });
+scene.add(moon);
+const fireLight = new THREE.PointLight(0xff8a2a, 7, 10, 1.5);
+fireLight.position.set(0, 1.1, 0.3);
+scene.add(fireLight);
+
+const mat = (color, extra = {}) =>
+  new THREE.MeshStandardMaterial({ color, flatShading: true, roughness: 0.9, metalness: 0, ...extra });
+const add = (mesh, parent = scene) => {
+  mesh.castShadow = true;
+  mesh.receiveShadow = true;
+  parent.add(mesh);
+  return mesh;
+};
+
+// Ground and dirt clearing around the fire
+const ground = new THREE.Mesh(new THREE.PlaneGeometry(40, 40), mat(0x2d4a2c));
+ground.rotation.x = -Math.PI / 2;
+ground.receiveShadow = true;
+scene.add(ground);
+add(new THREE.Mesh(new THREE.CylinderGeometry(3.4, 3.6, 0.04, 9), mat(0x4a3c2a))).position.y = 0.02;
+
+// Low bushes
+[[-1.6, -2.2, 0.6], [2.2, -1.4, 0.5], [-6.6, 1.2, 0.7], [6.8, 0.4, 0.55]].forEach(([x, z, s]) => {
+  const b = add(new THREE.Mesh(new THREE.IcosahedronGeometry(s, 0), mat(0x2f5c35)));
+  b.position.set(x, s * 0.6, z);
+});
+
+// Tent: four-sided pyramid with a dark door
+const tent = new THREE.Group();
+tent.position.set(-3.2, 0, -1.2);
+tent.rotation.y = 0.35;
+scene.add(tent);
+const tentGeo = new THREE.ConeGeometry(1.4, 1.6, 4);
+tentGeo.rotateY(Math.PI / 4);
+const tentMesh = add(new THREE.Mesh(tentGeo, mat(0xb9a27a)), tent);
+tentMesh.position.y = 0.8;
+add(new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.85, 0.03), mat(0x2a1e14)), tent).position.set(0, 0.42, 1.0);
+
+// Campfire: stone ring, crossed logs, layered flames
+const campfire = new THREE.Group();
+scene.add(campfire);
+for (let i = 0; i < 8; i++) {
+  const a = (i / 8) * Math.PI * 2;
+  const stone = add(new THREE.Mesh(new THREE.DodecahedronGeometry(0.28, 0), mat(0x6b6b72)), campfire);
+  stone.position.set(Math.cos(a) * 0.95, 0.1, Math.sin(a) * 0.95);
+  stone.rotation.set(a, a * 2, 0.3);
+  stone.scale.y = 0.7;
+}
+[0.6, -0.6].forEach((ang) => {
+  const log = add(new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.11, 1.4, 6), mat(0x4a2f1c)), campfire);
+  log.rotation.set(0, ang, Math.PI / 2);
+  log.position.y = 0.14;
+});
+const flameOuter = new THREE.Mesh(new THREE.ConeGeometry(0.3, 0.9, 5), new THREE.MeshBasicMaterial({ color: 0xff6a16 }));
+flameOuter.position.set(0, 0.6, 0);
+campfire.add(flameOuter);
+const flameMid = new THREE.Mesh(new THREE.ConeGeometry(0.2, 0.65, 5), new THREE.MeshBasicMaterial({ color: 0xffb030 }));
+flameMid.position.set(0.06, 0.5, 0.04);
+flameMid.rotation.z = -0.15;
+campfire.add(flameMid);
+const flameCore = new THREE.Mesh(new THREE.ConeGeometry(0.11, 0.4, 5), new THREE.MeshBasicMaterial({ color: 0xffe680 }));
+flameCore.position.set(-0.03, 0.38, 0.02);
+campfire.add(flameCore);
+
+// Trees: stacked low-poly icosahedron foliage on a trunk
+const makeTree = (x, z, scale) => {
+  const tree = new THREE.Group();
+  tree.position.set(x, 0, z);
+  tree.scale.setScalar(scale);
+  scene.add(tree);
+  add(new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.26, 1.6, 5), mat(0x4d3322)), tree).position.y = 0.8;
+  add(new THREE.Mesh(new THREE.IcosahedronGeometry(1.1, 0), mat(0x1f4a2e)), tree).position.y = 2.3;
+  add(new THREE.Mesh(new THREE.IcosahedronGeometry(0.75, 0), mat(0x26573a)), tree).position.y = 3.2;
+};
+makeTree(-6.0, -3.5, 1.0);
+makeTree(5.2, -4.2, 1.25);
+makeTree(4.6, 2.0, 0.85);
+
+// Rocks: squashed low-poly dodecahedrons
+const rockA = add(new THREE.Mesh(new THREE.DodecahedronGeometry(0.6, 0), mat(0x7d7f88)));
+rockA.position.set(2.6, 0.2, 2.6);
+rockA.scale.set(1.2, 0.7, 1.0);
+rockA.rotation.set(0.4, 1.1, 0.2);
+const rockB = add(new THREE.Mesh(new THREE.DodecahedronGeometry(0.42, 0), mat(0x6e7079)));
+rockB.position.set(-1.7, 0.12, 2.9);
+rockB.scale.set(1.1, 0.75, 1.0);
+rockB.rotation.set(0.1, 0.5, 0.6);
+
+// Render once; the scene is static
+const render = () => renderer.render(scene, camera);
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  render();
+});
+render();
+</script>
+</body>
+</html>

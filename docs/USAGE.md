@@ -133,7 +133,7 @@ spread between parts exceeds `--max-ratio`.
 ```python
 import validate_scene, importlib
 importlib.reload(validate_scene)
-rep = validate_scene.validate(frame=(0.36, 0.32, 1.84), expect_height=1.80)
+rep = validate_scene.validate(expect_height=1.80)
 validate_scene.print_report(rep)
 ```
 
@@ -145,7 +145,7 @@ before wasting a render.
 ```python
 import render_compare_views as rcv, importlib
 importlib.reload(rcv)
-rcv.render_turnaround("out/", height=1.80, views=["front", "side", "three_quarter"])
+rcv.render_turnaround("out/", views=["front", "side", "three_quarter"])
 ```
 
 Renders with transparent film by default when you set `film_transparent`, which gives an exact
@@ -229,4 +229,4 @@ dangling `palette_report.py` reference during this library's own build.
 - [`TEST_RESULTS.md`](TEST_RESULTS.md) — what was actually run, including the failure
 - [`LIMITATIONS.md`](LIMITATIONS.md) — read this before trusting a skill
 - [`COVERAGE.md`](COVERAGE.md) — skill × technique matrix
-- [`knowledge-base/README.md`](knowledge-base/README.md) — the 58 techniques
+- [`knowledge-base/README.md`](knowledge-base/README.md) — the 81 techniques

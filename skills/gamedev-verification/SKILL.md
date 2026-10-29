@@ -1,8 +1,9 @@
 ---
 name: gamedev-verification
 description: >
-  Prove work is finished before claiming it. Use before reporting done, before handoff, or
-  when a tool said success and you have not looked at the result.
+  Prove work is finished before claiming it, by inspecting the actual result. Use before
+  reporting done, before handoff, or when a tool said success and you have not looked. For
+  writing repeatable tests use game-testing.
 license: Apache-2.0
 compatibility: Engine-agnostic. Examples for Godot 4.x, Unity 6, Blender 4.x/5.x.
 metadata:

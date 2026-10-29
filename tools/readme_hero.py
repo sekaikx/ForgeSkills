@@ -19,9 +19,23 @@ QUIET = (154, 158, 164)
 RULE = (58, 62, 68)
 
 
+FONT_CANDIDATES = {
+    False: [r"C:\Windows\Fonts\consola.ttf",
+            "/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf",
+            "/System/Library/Fonts/Menlo.ttc"],
+    True: [r"C:\Windows\Fonts\segoeuib.ttf",
+           "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
+           "/System/Library/Fonts/Helvetica.ttc"],
+}
+
+
 def font(size, bold=False):
-    name = "segoeuib.ttf" if bold else "consola.ttf"
-    return ImageFont.truetype(rf"C:\Windows\Fonts\{name}", size)
+    for path in FONT_CANDIDATES[bold]:
+        try:
+            return ImageFont.truetype(path, size)
+        except OSError:
+            continue
+    return ImageFont.load_default()
 
 
 def figure(draw, ox, oy, s, hood, shoulder, height):

@@ -17,7 +17,9 @@ try:
     from explorer_common import PALETTE, Dim, mat, assign, loft, rounded_box, cylinder
 except ImportError:
     import importlib.util, os
-    _p = os.path.join(os.path.dirname(os.path.abspath(__file__)), "explorer_common.py")
+    # __file__ is undefined when run through exec(); fall back to the working directory
+    _here = os.path.dirname(os.path.abspath(globals().get("__file__") or "."))
+    _p = os.path.join(_here, "explorer_common.py")
     _spec = importlib.util.spec_from_file_location("explorer_common", _p)
     _m = importlib.util.module_from_spec(_spec)
     _spec.loader.exec_module(_m)
@@ -228,3 +230,13 @@ def build_explorer(H=1.80):
 
     print("PASS2 objects:", len([o for o in col.objects]))
     return col
+
+
+if __name__ == "__main__":
+    import sys
+    H = 1.80
+    if "--" in sys.argv:
+        argv = sys.argv[sys.argv.index("--") + 1:]
+        if "--height" in argv:
+            H = float(argv[argv.index("--height") + 1])
+    build_explorer(H)
